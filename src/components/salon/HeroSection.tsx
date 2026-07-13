@@ -2,25 +2,13 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-const headline = 'Beautiful Hair. Radiant Skin. Confident You.'
+const headlineWords = ['Beautiful', 'Hair.', 'Radiant', 'Skin.', 'Confident', 'You.']
 
 export default function HeroSection() {
-  const scrollToBooking = () => {
-    const el = document.querySelector('#booking')
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
-  }
-  const scrollToAcademy = () => {
-    const el = document.querySelector('#academy')
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
-  }
-  const scrollToProducts = () => {
-    const el = document.querySelector('#products')
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <section
       id="home"
@@ -76,33 +64,28 @@ export default function HeroSection() {
           </span>
         </motion.div>
 
-        <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white font-[family-name:var(--font-playfair)] leading-tight mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {headline.split('').map((char, i) => (
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white font-[family-name:var(--font-playfair)] leading-tight mb-6">
+          {headlineWords.map((word, i) => (
             <motion.span
               key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
                 duration: 0.4,
-                delay: 0.5 + i * 0.02,
+                delay: 0.3 + i * 0.12,
                 ease: 'easeOut',
               }}
-              className={char === ' ' ? 'inline' : 'inline-block'}
+              className="inline-block mr-[0.3em]"
             >
-              {char}
+              {word}
             </motion.span>
           ))}
-        </motion.h1>
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.4 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
           className="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-8 font-[family-name:var(--font-lato)] leading-relaxed"
         >
           Experience premium hair care, skin treatments, bridal makeup, and
@@ -113,32 +96,35 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.7 }}
+          transition={{ duration: 0.6, delay: 1.5 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Button
-            onClick={scrollToBooking}
-            size="lg"
-            className="bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)] shadow-lg"
-          >
-            Book Appointment
-          </Button>
-          <Button
-            onClick={scrollToAcademy}
-            variant="outline"
-            size="lg"
-            className="border-gold text-gold hover:bg-gold/10 rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)]"
-          >
-            Explore Courses
-          </Button>
-          <Button
-            onClick={scrollToProducts}
-            variant="outline"
-            size="lg"
-            className="border-white/40 text-white hover:bg-white/10 rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)]"
-          >
-            Shop Products
-          </Button>
+          <Link href="/booking">
+            <Button
+              size="lg"
+              className="bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)] shadow-lg"
+            >
+              Book Appointment
+            </Button>
+          </Link>
+          <Link href="/academy">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-gold text-gold hover:bg-gold/10 rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)]"
+            >
+              Explore Courses
+            </Button>
+          </Link>
+          <Link href="/products">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-gold text-gold hover:bg-gold/10 rounded-full px-8 py-6 text-base font-[family-name:var(--font-lato)]"
+            >
+              Shop Products
+            </Button>
+          </Link>
         </motion.div>
       </div>
 

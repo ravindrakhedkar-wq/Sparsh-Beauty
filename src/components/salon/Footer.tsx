@@ -1,32 +1,33 @@
 'use client'
 
+import Link from 'next/link'
 import { Instagram, Facebook, Youtube, Twitter } from 'lucide-react'
 
 const quickLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'About Us', href: '#founder' },
-  { label: 'Services', href: '#services' },
-  { label: 'Academy', href: '#academy' },
-  { label: 'Products', href: '#products' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Services', href: '/services' },
+  { label: 'Academy', href: '/academy' },
+  { label: 'Products', href: '/products' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 const serviceLinks = [
-  'Hair Care',
-  'Skin Care',
-  'Makeup',
-  'Nail Care',
-  'Bridal Services',
+  { label: 'Hair Care', href: '/services' },
+  { label: 'Skin Care', href: '/services' },
+  { label: 'Makeup', href: '/services' },
+  { label: 'Nail Care', href: '/services' },
+  { label: 'Bridal Services', href: '/services' },
 ]
 
 const courseLinks = [
-  'Beautician Course',
-  'Hair Styling',
-  'Makeup Artist',
-  'Skin Care',
-  'Bridal Makeup',
+  { label: 'Beautician Course', href: '/academy' },
+  { label: 'Hair Styling', href: '/academy' },
+  { label: 'Makeup Artist', href: '/academy' },
+  { label: 'Skin Care', href: '/academy' },
+  { label: 'Bridal Makeup', href: '/academy' },
 ]
 
 const socialLinks = [
@@ -37,11 +38,6 @@ const socialLinks = [
 ]
 
 export default function Footer() {
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href)
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <footer className="bg-charcoal text-white/80">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16">
@@ -53,13 +49,13 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <button
-                    onClick={() => scrollTo(link.href)}
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
                     className="text-sm font-[family-name:var(--font-lato)] text-white/60 hover:text-gold transition-colors"
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -72,10 +68,13 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {serviceLinks.map((s) => (
-                <li key={s}>
-                  <span className="text-sm font-[family-name:var(--font-lato)] text-white/60">
-                    {s}
-                  </span>
+                <li key={s.label}>
+                  <Link
+                    href={s.href}
+                    className="text-sm font-[family-name:var(--font-lato)] text-white/60 hover:text-gold transition-colors"
+                  >
+                    {s.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -88,10 +87,13 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {courseLinks.map((c) => (
-                <li key={c}>
-                  <span className="text-sm font-[family-name:var(--font-lato)] text-white/60">
-                    {c}
-                  </span>
+                <li key={c.label}>
+                  <Link
+                    href={c.href}
+                    className="text-sm font-[family-name:var(--font-lato)] text-white/60 hover:text-gold transition-colors"
+                  >
+                    {c.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -138,18 +140,12 @@ export default function Footer() {
             Where Beauty Meets Expertise
           </p>
           <div className="flex gap-4">
-            <button
-              onClick={() => scrollTo('#contact')}
-              className="text-xs font-[family-name:var(--font-lato)] text-white/40 hover:text-gold transition-colors"
-            >
+            <span className="text-xs font-[family-name:var(--font-lato)] text-white/40 hover:text-gold transition-colors cursor-pointer">
               Privacy Policy
-            </button>
-            <button
-              onClick={() => scrollTo('#contact')}
-              className="text-xs font-[family-name:var(--font-lato)] text-white/40 hover:text-gold transition-colors"
-            >
+            </span>
+            <span className="text-xs font-[family-name:var(--font-lato)] text-white/40 hover:text-gold transition-colors cursor-pointer">
               Terms &amp; Conditions
-            </button>
+            </span>
           </div>
         </div>
       </div>
