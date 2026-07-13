@@ -1,0 +1,569 @@
+     1→'use client'
+     2→
+     3→import { useState, useRef } from 'react'
+     4→import { motion, useInView, AnimatePresence } from 'framer-motion'
+     5→import { Scissors, Sparkles, Palette, Heart, Clock, Check, X, ChevronRight } from 'lucide-react'
+     6→import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+     7→import { Card, CardContent } from '@/components/ui/card'
+     8→import { Button } from '@/components/ui/button'
+     9→import { Badge } from '@/components/ui/badge'
+    10→import {
+    11→  Dialog,
+    12→  DialogContent,
+    13→  DialogHeader,
+    14→  DialogTitle,
+    15→} from '@/components/ui/dialog'
+    16→import Link from 'next/link'
+    17→
+    18→interface ServiceDetail {
+    19→  name: string
+    20→  icon: React.ReactNode
+    21→  price: number
+    22→  duration: string
+    23→  shortDesc: string
+    24→  description: string
+    25→  includes: string[]
+    26→  idealFor: string
+    27→}
+    28→
+    29→const hairCareServices: ServiceDetail[] = [
+    30→  {
+    31→    name: 'Hair Cutting & Styling',
+    32→    icon: <Scissors className="w-5 h-5" />,
+    33→    price: 499,
+    34→    duration: '45–60 min',
+    35→    shortDesc: 'Expert cuts tailored to your face shape and style preference',
+    36→    description: 'Our expert stylists analyze your face shape, hair texture, and lifestyle to create a look that complements you perfectly. From classic cuts to trendy styles, we ensure every snip enhances your natural beauty.',
+    37→    includes: ['Consultation with stylist', 'Hair wash & conditioning', 'Precision cut & styling', 'Blow dry finish', 'Aftercare tips'],
+    38→    idealFor: 'Anyone looking for a fresh, flattering hairstyle — men, women, and kids welcome.',
+    39→  },
+    40→  {
+    41→    name: 'Hair Spa & Deep Conditioning',
+    42→    icon: <Sparkles className="w-5 h-5" />,
+    43→    price: 1299,
+    44→    duration: '60–75 min',
+    45→    shortDesc: 'Intensive nourishment therapy for damaged or dry hair',
+    46→    description: 'A luxurious multi-step spa treatment that deeply nourishes and repairs your hair from root to tip. We use premium salon-grade products to restore moisture, shine, and strength to even the most damaged hair.',
+    47→    includes: ['Hair analysis', 'Deep cleansing shampoo', 'Intensive conditioning mask', 'Steam therapy', 'Scalp massage', 'Blow dry finish'],
+    48→    idealFor: 'Dry, frizzy, chemically-treated, or damaged hair needing intense repair.',
+    49→  },
+    50→  {
+    51→    name: 'Hair Smoothening',
+    52→    icon: <Sparkles className="w-5 h-5" />,
+    53→    price: 3999,
+    54→    duration: '2–3 hours',
+    55→    shortDesc: 'Frizz-free, silky smooth hair that lasts 3–4 months',
+    56→    description: 'Our hair smoothening treatment uses advanced protein-rich formulas to relax hair bonds, eliminating frizz and leaving your hair silky, manageable, and glossy for months.',
+    57→    includes: ['Hair compatibility test', 'Pre-treatment shampoo', 'Smoothening cream application', 'Flat iron processing', 'Post-treatment care', 'Maintenance tips'],
+    58→    idealFor: 'People with frizzy, unmanageable, or wavy hair wanting smooth, straight results.',
+    59→  },
+    60→  {
+    61→    name: 'Rebonding',
+    62→    icon: <Sparkles className="w-5 h-5" />,
+    63→    price: 4999,
+    64→    duration: '3–4 hours',
+    65→    shortDesc: 'Permanent straightening for perfectly sleek, pin-straight hair',
+    66→    description: 'A chemical restructuring treatment that permanently breaks and rebuilds hair bonds to give you pin-straight, glossy hair. Uses premium Japanese/American products for safe, lasting results.',
+    67→    includes: ['Strand test', 'Pre-treatment care', 'Bond breaking cream', 'Neutralizer application', 'Flat iron finishing', 'Aftercare kit'],
+    68→    idealFor: 'Those wanting permanently straight, sleek hair with minimal daily maintenance.',
+    69→  },
+    70→  {
+    71→    name: 'Keratin Treatment',
+    72→    icon: <Sparkles className="w-5 h-5" />,
+    73→    price: 5499,
+    74→    duration: '2–3 hours',
+    75→    shortDesc: 'Brazilian keratin for shiny, frizz-free, healthy-looking hair',
+    76→    description: 'Our premium keratin treatment infuses natural keratin deep into the hair cuticle, repairing damage and creating a protective layer that eliminates frizz and adds incredible shine. Results last 3–5 months.',
+    77→    includes: ['Hair porosity test', 'Clarifying wash', 'Keratin application', 'Blow dry & flat iron seal', 'Post-treatment shampoo', '48hr care instructions'],
+    78→    idealFor: 'All hair types — especially beneficial for frizzy, damaged, or color-treated hair.',
+    79→  },
+    80→  {
+    81→    name: 'Hair Botox',
+    82→    icon: <Sparkles className="w-5 h-5" />,
+    83→    price: 4499,
+    84→    duration: '90–120 min',
+    85→    shortDesc: 'Anti-aging deep repair treatment for volume and shine',
+    86→    description: 'Hair Botox is a non-chemical, deep conditioning treatment that fills in broken hair fibers with hyaluronic acid, collagen, and vitamins. It plumps fine hair, adds volume, and restores youthful bounce without changing hair structure.',
+    87→    includes: ['Hair diagnosis', 'Cleansing treatment', 'Botox mask application', 'Infrared heat activation', 'Rinse & blow dry', 'Shine spray finish'],
+    88→    idealFor: 'Fine, thinning, or aging hair that needs volume, strength, and a youthful look.',
+    89→  },
+    90→  {
+    91→    name: 'Hair Coloring',
+    92→    icon: <Palette className="w-5 h-5" />,
+    93→    price: 2499,
+    94→    duration: '2–3 hours',
+    95→    shortDesc: 'Global color, highlights, and creative color techniques',
+    96→    description: 'From natural-looking global colors to bold fashion shades, our colorists use ammonia-free formulas to deliver vibrant, long-lasting color while keeping your hair healthy and shiny.',
+    97→    includes: ['Color consultation', 'Patch test', 'Premium color application', 'Processing time', 'Color-protective shampoo', 'Conditioning treatment', 'Blow dry styling'],
+    98→    idealFor: 'Anyone wanting to cover grays, change their look, or add dimension with color.',
+    99→  },
+   100→  {
+   101→    name: 'Highlights',
+   102→    icon: <Palette className="w-5 h-5" />,
+   103→    price: 3499,
+   104→    duration: '2.5–3.5 hours',
+   105→    shortDesc: 'Dimensional highlights for a natural, sun-kissed effect',
+   106→    description: 'Our expert colorists hand-paint highlights using the balayage or foil technique to create natural, multi-dimensional color that brightens your face and adds movement to your hair.',
+   107→    includes: ['Color consultation', 'Strand selection', 'Lightener application', 'Foil/balayage technique', 'Toner application', 'Deep conditioning', 'Styling'],
+   108→    idealFor: 'Those wanting natural-looking dimension and brightness without a full color change.',
+   109→  },
+   110→  {
+   111→    name: 'Hair Fall Treatment',
+   112→    icon: <Heart className="w-5 h-5" />,
+   113→    price: 1999,
+   114→    duration: '60–75 min',
+   115→    shortDesc: 'Clinically-proven treatment to reduce hair fall and strengthen roots',
+   116→    description: 'A targeted treatment using peptide-rich serums, scalp stimulators, and nourishing oils to strengthen hair roots, improve blood circulation, and significantly reduce hair fall over a series of sessions.',
+   117→    includes: ['Scalp analysis', 'Deep cleansing', 'Growth serum application', 'Scalp stimulation massage', 'Laser comb therapy', 'Nourishing mask'],
+   118→    idealFor: 'People experiencing hair thinning, excessive shedding, or weak hair roots.',
+   119→  },
+   120→  {
+   121→    name: 'Scalp Therapy',
+   122→    icon: <Heart className="w-5 h-5" />,
+   123→    price: 1499,
+   124→    duration: '45–60 min',
+   125→    shortDesc: 'Deep scalp detox and rejuvenation for healthy hair growth',
+   126→    description: 'Our scalp therapy targets dandruff, oiliness, itchiness, and product buildup. Using exfoliating scrubs, antibacterial serums, and hydrating treatments, we restore your scalp to its optimal healthy state.',
+   127→    includes: ['Scalp examination', 'Exfoliating scrub', 'Antibacterial treatment', 'Hydrating serum', 'Steaming', 'Relaxing massage'],
+   128→    idealFor: 'Anyone with scalp issues like dandruff, excess oil, dryness, or product buildup.',
+   129→  },
+   130→]
+   131→
+   132→const skinCareServices: ServiceDetail[] = [
+   133→  {
+   134→    name: 'Professional Facials',
+   135→    icon: <Sparkles className="w-5 h-5" />,
+   136→    price: 999,
+   137→    duration: '60–75 min',
+   138→    shortDesc: 'Customized facials for glowing, healthy skin',
+   139→    description: 'Our facials are customized to your skin type and concerns. Using premium products, each facial includes deep cleansing, exfoliation, extraction, massage, and masking for visibly radiant skin.',
+   140→    includes: ['Skin analysis', 'Double cleansing', 'Exfoliation', 'Extractions (if needed)', 'Face & neck massage', 'Custom mask', 'Moisturizing & sun protection'],
+   141→    idealFor: 'All skin types — customized for oily, dry, combination, or sensitive skin.',
+   142→  },
+   143→  {
+   144→    name: 'Skin Rejuvenation',
+   145→    icon: <Sparkles className="w-5 h-5" />,
+   146→    price: 2499,
+   147→    duration: '75–90 min',
+   148→    shortDesc: 'Advanced anti-aging treatment to restore youthful glow',
+   149→    description: 'A multi-step treatment using serums, LED therapy, and premium masks to boost collagen production, reduce fine lines, and restore your skin\'s natural youthful radiance.',
+   150→    includes: ['Skin assessment', 'Micro-dermabrasion', 'Vitamin C serum infusion', 'LED light therapy', 'Collagen mask', 'Lifting massage', 'SPF protection'],
+   151→    idealFor: 'Aging skin with fine lines, dullness, or loss of firmness.',
+   152→  },
+   153→  {
+   154→    name: 'Detan Treatments',
+   155→    icon: <Sparkles className="w-5 h-5" />,
+   156→    price: 1499,
+   157→    duration: '60 min',
+   158→    shortDesc: 'Effective tan removal for even-toned, brighter skin',
+   159→    description: 'Our detan treatment uses natural enzymes and mild bleaching agents to safely remove tanning, sun spots, and uneven pigmentation, revealing brighter, more even-toned skin underneath.',
+   160→    includes: ['Skin type assessment', 'Pre-cleansing', 'Detan pack application', 'Steam therapy', 'Cooling mask', 'Moisturizing finish'],
+   161→    idealFor: 'Sun-tanned or uneven skin tone from sun exposure.',
+   162→  },
+   163→  {
+   164→    name: 'Acne Care',
+   165→    icon: <Heart className="w-5 h-5" />,
+   166→    price: 1799,
+   167→    duration: '60–75 min',
+   168→    shortDesc: 'Clinical acne treatment to clear breakouts and prevent scars',
+   169→    description: 'A targeted clinical treatment that addresses active acne, reduces inflammation, unclogs pores, and prevents future breakouts using antibacterial and anti-inflammatory formulations.',
+   170→    includes: ['Skin analysis', 'Antibacterial cleansing', 'Comedone extraction', 'Anti-acne serum', 'Calming mask', 'Blue light therapy', 'Oil-free moisturizer'],
+   171→    idealFor: 'Acne-prone skin with active breakouts, blackheads, or whiteheads.',
+   172→  },
+   173→  {
+   174→    name: 'Pigmentation Treatment',
+   175→    icon: <Sparkles className="w-5 h-5" />,
+   176→    price: 2999,
+   177→    duration: '75–90 min',
+   178→    shortDesc: 'Advanced treatment to reduce dark spots and even out skin tone',
+   179→    description: 'Using brightening serums, mild peels, and targeted treatments, we work to reduce hyperpigmentation, dark spots, and uneven skin tone for a clearer, more uniform complexion.',
+   180→    includes: ['Skin mapping', 'Brightening cleanser', 'Glycolic peel', 'Vitamin C infusion', 'Depigmentation mask', 'SPF protection'],
+   181→    idealFor: 'Dark spots, melasma, sun spots, or post-acne pigmentation.',
+   182→  },
+   183→  {
+   184→    name: 'Bridal Glow Therapy',
+   185→    icon: <Sparkles className="w-5 h-5" />,
+   186→    price: 3999,
+   187→    duration: '90–120 min',
+   188→    shortDesc: 'Complete pre-bridal skin prep for that perfect wedding glow',
+   189→    description: 'A luxurious multi-session package designed to give brides-to-be a radiant, camera-ready glow on their special day. Includes deep cleansing, brightening, hydration, and glow-boosting treatments.',
+   190→    includes: ['Skin analysis & plan', 'Gold facial', 'Hydra facial', 'Skin brightening pack', 'De-tan treatment', 'Glow-boosting serum', 'Face & neck massage', 'Bridal skincare kit'],
+   191→    idealFor: 'Brides-to-be starting 1–2 months before the wedding for best results.',
+   192→  },
+   193→  {
+   194→    name: 'Skin Brightening',
+   195→    icon: <Sparkles className="w-5 h-5" />,
+   196→    price: 1999,
+   197→    duration: '60–75 min',
+   198→    shortDesc: 'Professional brightening for radiant, luminous skin',
+   199→    description: 'Our skin brightening treatment uses a combination of exfoliation, vitamin infusions, and brightening masks to give you an immediate, visible glow and long-term improvement in skin clarity.',
+   200→    includes: ['Skin type analysis', 'Enzyme peel', 'Vitamin C serum', 'Brightening mask', 'Face massage', 'Hydrating finish'],
+   201→    idealFor: 'Dull, tired, or uneven skin needing an instant brightness boost.',
+   202→  },
+   203→]
+   204→
+   205→const makeupServices: ServiceDetail[] = [
+   206→  {
+   207→    name: 'Bridal Makeup',
+   208→    icon: <Palette className="w-5 h-5" />,
+   209→    price: 14999,
+   210→    duration: '3–4 hours',
+   211→    shortDesc: 'Complete bridal look — flawless, long-lasting, camera-ready',
+   212→    description: 'Our signature bridal makeup service creates a timeless, elegant look that photographs beautifully and lasts through tears, dancing, and celebrations. Using HD and long-wear products for a flawless finish.',
+   213→    includes: ['Pre-bridal consultation', 'Skin prep & primer', 'HD foundation application', 'Eye makeup with lashes', 'Contouring & highlighting', 'Lip color selection', 'Setting spray', 'Touch-up kit'],
+   214→    idealFor: 'Brides wanting a perfect, long-lasting look for their wedding day.',
+   215→  },
+   216→  {
+   217→    name: 'Engagement Makeup',
+   218→    icon: <Palette className="w-5 h-5" />,
+   219→    price: 6999,
+   220→    duration: '2–2.5 hours',
+   221→    shortDesc: 'Elegant, radiant look for your engagement ceremony',
+   222→    description: 'A refined, elegant makeup look perfect for engagement ceremonies, mehndi, or sangeet. We focus on a glowing, fresh look that complements your outfit and jewelry.',
+   223→    includes: ['Skin preparation', 'Primer & base', 'Eye makeup', 'Blush & contour', 'Lip color', 'Hairstyling', 'Setting & finishing'],
+   224→    idealFor: 'Brides-to-be for pre-wedding events and engagement ceremonies.',
+   225→  },
+   226→  {
+   227→    name: 'Party Makeup',
+   228→    icon: <Palette className="w-5 h-5" />,
+   229→    price: 2999,
+   230→    duration: '60–90 min',
+   231→    shortDesc: 'Glamorous makeup for parties, events, and celebrations',
+   232→    description: 'A trendy, glam makeup look perfect for parties, cocktails, and social events. We customize the look to match your outfit and the event vibe — from subtle glam to full glam.',
+   233→    includes: ['Skin prep', 'Foundation & concealer', 'Eye makeup', 'Contouring', 'Lip color', 'Lashes', 'Finishing spray'],
+   234→    idealFor: 'Anyone wanting a glamorous look for parties, events, or nights out.',
+   235→  },
+   236→  {
+   237→    name: 'HD Makeup',
+   238→    icon: <Palette className="w-5 h-5" />,
+   239→    price: 4999,
+   240→    duration: '90–120 min',
+   241→    shortDesc: 'High-definition makeup for a flawless, natural finish',
+   242→    description: 'HD makeup uses ultra-fine, high-definition products that are invisible to the camera but give your skin a flawless, airbrushed finish. Perfect for photoshoots and close-up events.',
+   243→    includes: ['Color matching', 'HD primer', 'HD foundation', 'Concealer application', 'HD setting powder', 'Eye & lip makeup', 'Finishing spray'],
+   244→    idealFor: 'Photoshoots, close-up events, and anyone wanting a camera-perfect finish.',
+   245→  },
+   246→  {
+   247→    name: 'Airbrush Makeup',
+   248→    icon: <Palette className="w-5 h-5" />,
+   249→    price: 7999,
+   250→    duration: '90–120 min',
+   251→    shortDesc: 'Lightweight, flawless airbrush technique for a perfect finish',
+   252→    description: 'Airbrush makeup uses a specialized airbrush gun to spray micro-fine makeup onto your skin, creating an incredibly even, lightweight, and long-lasting finish that looks stunning in person and on camera.',
+   253→    includes: ['Skin analysis', 'Airbrush primer', 'Airbrush foundation', 'Airbrush contouring', 'Concealer detailing', 'Eye & lip makeup', 'Airbrush setting'],
+   254→    idealFor: 'Brides and events where photography is a priority — lasts 12+ hours.',
+   255→  },
+   256→  {
+   257→    name: 'Fashion Makeup',
+   258→    icon: <Palette className="w-5 h-5" />,
+   259→    price: 5999,
+   260→    duration: '90–120 min',
+   261→    shortDesc: 'Bold, creative looks for fashion shoots and ramp walks',
+   262→    description: 'Creative, editorial-style makeup for fashion shoots, ramp walks, and editorial projects. Our artists create bold, artistic looks that make a statement on camera and on the runway.',
+   263→    includes: ['Mood board consultation', 'Creative design', 'Full face makeup', 'Artistic elements', 'False lashes', 'Body makeup if needed', 'Multiple look changes'],
+   264→    idealFor: 'Models, influencers, fashion events, and creative photoshoots.',
+   265→  },
+   266→]
+   267→
+   268→const nailBeautyServices: ServiceDetail[] = [
+   269→  {
+   270→    name: 'Manicure',
+   271→    icon: <Heart className="w-5 h-5" />,
+   272→    price: 499,
+   273→    duration: '30–45 min',
+   274→    shortDesc: 'Classic nail care for beautifully groomed hands',
+   275→    description: 'Our manicure includes nail shaping, cuticle care, hand massage, and polish application for beautifully groomed, elegant hands.',
+   276→    includes: ['Nail shaping & filing', 'Cuticle care', 'Hand exfoliation', 'Hand massage', 'Moisturizing', 'Nail polish application'],
+   277→    idealFor: 'Regular nail care and grooming for clean, polished hands.',
+   278→  },
+   279→  {
+   280→    name: 'Pedicure',
+   281→    icon: <Heart className="w-5 h-5" />,
+   282→    price: 699,
+   283→    duration: '45–60 min',
+   284→    shortDesc: 'Relaxing foot care treatment for soft, beautiful feet',
+   285→    description: 'A complete foot care treatment including foot soak, callus removal, nail care, and massage for soft, refreshed, and beautiful feet.',
+   286→    includes: ['Foot soak', 'Callus removal', 'Nail shaping', 'Cuticle care', 'Foot scrub', 'Foot & leg massage', 'Moisturizing', 'Nail polish'],
+   287→    idealFor: 'Regular foot care, cracked heels, or for a relaxing pampering session.',
+   288→  },
+   289→  {
+   290→    name: 'Nail Care',
+   291→    icon: <Heart className="w-5 h-5" />,
+   292→    price: 799,
+   293→    duration: '60–75 min',
+   294→    shortDesc: 'Gel/acrylic nail extensions and nail art',
+   295→    description: 'Premium nail care including gel extensions, acrylic nails, and creative nail art. Our nail artists create stunning designs using premium products that last 2–3 weeks.',
+   296→    includes: ['Nail preparation', 'Extension application (gel/acrylic)', 'Shape & length selection', 'Nail art design', 'Top coat & seal', 'Aftercare tips'],
+   297→    idealFor: 'Those wanting long, beautiful nails with creative designs.',
+   298→  },
+   299→  {
+   300→    name: 'Waxing',
+   301→    icon: <Sparkles className="w-5 h-5" />,
+   302→    price: 399,
+   303→    duration: '20–45 min',
+   304→    shortDesc: 'Smooth, hair-free skin with premium waxing',
+   305→    description: 'We use gentle, premium wax suitable for sensitive skin. Our experienced therapists ensure minimal discomfort and silky-smooth results that last 3–4 weeks.',
+   306→    includes: ['Pre-wax cleansing', 'Premium wax application', 'Soothing post-wax oil', 'Aloe vera gel application', 'Aftercare advice'],
+   307→    idealFor: 'Anyone wanting smooth, hair-free skin on any body area.',
+   308→  },
+   309→  {
+   310→    name: 'Threading',
+   311→    icon: <Scissors className="w-5 h-5" />,
+   312→    price: 99,
+   313→    duration: '10–15 min',
+   314→    shortDesc: 'Precise eyebrow shaping and facial threading',
+   315→    description: 'Traditional threading technique for precise, clean hair removal. Perfect for eyebrow shaping, upper lip, chin, and forehead for a well-groomed look.',
+   316→    includes: ['Area preparation', 'Precision threading', 'Soothing aloe application', 'Aftercare tips'],
+   317→    idealFor: 'Quick, precise hair removal for eyebrows and facial areas.',
+   318→  },
+   319→  {
+   320→    name: 'Eyebrow Shaping',
+   321→    icon: <Scissors className="w-5 h-5" />,
+   322→    price: 199,
+   323→    duration: '20–30 min',
+   324→    shortDesc: 'Expert brow shaping to frame your face perfectly',
+   325→    description: 'Our brow artists assess your face shape and features to create the perfect eyebrow arch and shape that frames your face, opens your eyes, and enhances your natural beauty.',
+   326→    includes: ['Face shape analysis', 'Brow mapping', 'Threading/waxing', 'Trimming & tweezing', 'Brow gel application', 'Aftercare advice'],
+   327→    idealFor: 'Anyone wanting perfectly shaped, defined eyebrows.',
+   328→  },
+   329→  {
+   330→    name: 'Eyelash Services',
+   331→    icon: <Sparkles className="w-5 h-5" />,
+   332→    price: 999,
+   333→    duration: '60–90 min',
+   334→    shortDesc: 'Lash extensions, lifts, and tinting for dramatic eyes',
+   335→    description: 'Enhance your eyes with our premium lash services. Choose from lash extensions for dramatic length and volume, lash lifts for a natural curl, or lash tinting for defined, dark lashes.',
+   336→    includes: ['Lash consultation', 'Lash preparation', 'Extension/lift/tint application', 'Bonding/sealing', 'Aftercare instructions', 'Touch-up schedule'],
+   337→    idealFor: 'Anyone wanting enhanced, beautiful eyes without daily mascara.',
+   338→  },
+   339→]
+   340→
+   341→const allCategories = [
+   342→  { key: 'hair-care', label: 'Hair Care', services: hairCareServices, quote: 'Your hair is the crown you never take off—wear it beautifully.' },
+   343→  { key: 'skin-care', label: 'Skin Care', services: skinCareServices },
+   344→  { key: 'makeup', label: 'Makeup', services: makeupServices },
+   345→  { key: 'nail-beauty', label: 'Nail & Beauty', services: nailBeautyServices, quote: 'Enhance the beauty and health of your nails with professional care, nourishment, and precision grooming.' },
+   346→]
+   347→
+   348→function ServiceCard({ service, index, onClick }: { service: ServiceDetail; index: number; onClick: () => void }) {
+   349→  return (
+   350→    <motion.div
+   351→      initial={{ opacity: 0, y: 20 }}
+   352→      whileInView={{ opacity: 1, y: 0 }}
+   353→      viewport={{ once: true }}
+   354→      transition={{ duration: 0.4, delay: index * 0.05 }}
+   355→      whileHover={{ scale: 1.02, y: -2 }}
+   356→      onClick={onClick}
+   357→      className="cursor-pointer"
+   358→    >
+   359→      <Card className="border border-rose-gold-light/30 shadow-sm hover:shadow-md hover:border-rose-gold/40 transition-all duration-300 bg-white group">
+   360→        <CardContent className="p-4 md:p-5">
+   361→          <div className="flex items-start justify-between gap-3">
+   362→            <div className="flex items-start gap-3 flex-1 min-w-0">
+   363→              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-soft-pink flex items-center justify-center text-rose-gold group-hover:bg-rose-gold group-hover:text-white transition-colors duration-300">
+   364→                {service.icon}
+   365→              </div>
+   366→              <div className="min-w-0">
+   367→                <h3 className="text-sm md:text-base font-[family-name:var(--font-lato)] text-charcoal font-semibold truncate">
+   368→                  {service.name}
+   369→                </h3>
+   370→                <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mt-0.5 line-clamp-1">
+   371→                  {service.shortDesc}
+   372→                </p>
+   373→              </div>
+   374→            </div>
+   375→            <div className="text-right flex-shrink-0">
+   376→              <p className="text-base font-bold text-rose-gold font-[family-name:var(--font-playfair)]">
+   377→                ₹{service.price.toLocaleString('en-IN')}
+   378→              </p>
+   379→              <p className="text-[11px] text-warm-gray font-[family-name:var(--font-lato)]">{service.duration}</p>
+   380→            </div>
+   381→          </div>
+   382→          <div className="flex items-center justify-between mt-3 pt-3 border-t border-rose-gold-light/10">
+   383→            <div className="flex items-center gap-1 text-xs text-warm-gray font-[family-name:var(--font-lato)]">
+   384→              <Clock className="w-3 h-3" />
+   385→              <span>{service.duration}</span>
+   386→            </div>
+   387→            <span className="text-xs text-rose-gold font-medium font-[family-name:var(--font-lato)] flex items-center gap-1 group-hover:gap-1.5 transition-all">
+   388→              View Details <ChevronRight className="w-3 h-3" />
+   389→            </span>
+   390→          </div>
+   391→        </CardContent>
+   392→      </Card>
+   393→    </motion.div>
+   394→  )
+   395→}
+   396→
+   397→function ServiceDetailDialog({ service, open, onClose }: { service: ServiceDetail | null; open: boolean; onClose: () => void }) {
+   398→  if (!service) return null
+   399→
+   400→  return (
+   401→    <Dialog open={open} onOpenChange={onClose}>
+   402→      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+   403→        <DialogHeader>
+   404→          <div className="flex items-center gap-3">
+   405→            <div className="w-12 h-12 rounded-full bg-soft-pink flex items-center justify-center text-rose-gold flex-shrink-0">
+   406→              {service.icon}
+   407→            </div>
+   408→            <div>
+   409→              <DialogTitle className="font-[family-name:var(--font-playfair)] text-charcoal text-xl">
+   410→                {service.name}
+   411→              </DialogTitle>
+   412→              <div className="flex items-center gap-3 mt-1">
+   413→                <Badge className="bg-rose-gold/10 text-rose-gold border-0 text-xs font-[family-name:var(--font-lato)]">
+   414→                  {service.duration}
+   415→                </Badge>
+   416→                <span className="text-lg font-bold text-rose-gold font-[family-name:var(--font-playfair)]">
+   417→                  ₹{service.price.toLocaleString('en-IN')}
+   418→                </span>
+   419→              </div>
+   420→            </div>
+   421→          </div>
+   422→        </DialogHeader>
+   423→
+   424→        <div className="space-y-5 mt-2">
+   425→          {/* Description */}
+   426→          <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)] leading-relaxed">
+   427→            {service.description}
+   428→          </p>
+   429→
+   430→          {/* What's Included */}
+   431→          <div>
+   432→            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-3 flex items-center gap-2">
+   433→              <Check className="w-4 h-4 text-gold" />
+   434→              What&apos;s Included
+   435→            </h4>
+   436→            <div className="space-y-2">
+   437→              {service.includes.map((item) => (
+   438→                <div key={item} className="flex items-start gap-2.5">
+   439→                  <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+   440→                    <Check className="w-3 h-3 text-gold" />
+   441→                  </div>
+   442→                  <span className="text-sm text-charcoal/80 font-[family-name:var(--font-lato)]">{item}</span>
+   443→                </div>
+   444→              ))}
+   445→            </div>
+   446→          </div>
+   447→
+   448→          {/* Ideal For */}
+   449→          <div className="bg-soft-pink/50 rounded-xl p-4">
+   450→            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-2">
+   451→              Best For
+   452→            </h4>
+   453→            <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)]">
+   454→              {service.idealFor}
+   455→            </p>
+   456→          </div>
+   457→
+   458→          {/* Quick Info */}
+   459→          <div className="grid grid-cols-2 gap-3">
+   460→            <div className="bg-cream rounded-xl p-3 text-center">
+   461→              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Duration</p>
+   462→              <p className="text-sm font-semibold text-charcoal font-[family-name:var(--font-lato)]">{service.duration}</p>
+   463→            </div>
+   464→            <div className="bg-cream rounded-xl p-3 text-center">
+   465→              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Starting Price</p>
+   466→              <p className="text-sm font-semibold text-rose-gold font-[family-name:var(--font-playfair)]">₹{service.price.toLocaleString('en-IN')}</p>
+   467→            </div>
+   468→          </div>
+   469→
+   470→          {/* CTA */}
+   471→          <Link href="/booking" onClick={onClose}>
+   472→            <Button className="w-full bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full font-[family-name:var(--font-lato)] py-5">
+   473→              Book This Service
+   474→            </Button>
+   475→          </Link>
+   476→        </div>
+   477→      </DialogContent>
+   478→    </Dialog>
+   479→  )
+   480→}
+   481→
+   482→export default function ServicesSection() {
+   483→  const ref = useRef(null)
+   484→  const isInView = useInView(ref, { once: true, margin: '-100px' })
+   485→  const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null)
+   486→  const [dialogOpen, setDialogOpen] = useState(false)
+   487→
+   488→  const openDetail = (service: ServiceDetail) => {
+   489→    setSelectedService(service)
+   490→    setDialogOpen(true)
+   491→  }
+   492→
+   493→  return (
+   494→    <section id="services" className="section-padding bg-white" ref={ref}>
+   495→      <div className="max-w-6xl mx-auto">
+   496→        <motion.div
+   497→          initial={{ opacity: 0, y: 20 }}
+   498→          animate={isInView ? { opacity: 1, y: 0 } : {}}
+   499→          transition={{ duration: 0.6 }}
+   500→          className="text-center mb-10"
+   501→        >
+   502→          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold font-[family-name:var(--font-playfair)] text-charcoal mb-3">
+   503→            Our <span className="text-gold-gradient">Services</span>
+   504→          </h2>
+   505→          <div className="luxury-divider mb-4" />
+   506→          <p className="text-warm-gray font-[family-name:var(--font-lato)] max-w-2xl mx-auto">
+   507→            Discover our comprehensive range of premium beauty services. Click on any service to see full details, pricing, and what&apos;s included.
+   508→          </p>
+   509→        </motion.div>
+   510→
+   511→        <motion.div
+   512→          initial={{ opacity: 0, y: 20 }}
+   513→          animate={isInView ? { opacity: 1, y: 0 } : {}}
+   514→          transition={{ duration: 0.6, delay: 0.2 }}
+   515→        >
+   516→          <Tabs defaultValue="hair-care" className="w-full">
+   517→            <TabsList className="flex flex-wrap justify-center gap-1 bg-soft-pink/60 h-auto p-2 mb-8 rounded-full">
+   518→              {allCategories.map((cat) => (
+   519→                <TabsTrigger
+   520→                  key={cat.key}
+   521→                  value={cat.key}
+   522→                  className="data-[state=active]:bg-rose-gold data-[state=active]:text-white rounded-full px-4 md:px-6 py-2 text-sm font-[family-name:var(--font-lato)] text-charcoal transition-all"
+   523→                >
+   524→                  {cat.label}
+   525→                </TabsTrigger>
+   526→              ))}
+   527→            </TabsList>
+   528→
+   529→            {allCategories.map((cat) => (
+   530→              <TabsContent key={cat.key} value={cat.key}>
+   531→                <div>
+   532→                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+   533→                    {cat.services.map((service, i) => (
+   534→                      <ServiceCard
+   535→                        key={service.name}
+   536→                        service={service}
+   537→                        index={i}
+   538→                        onClick={() => openDetail(service)}
+   539→                      />
+   540→                    ))}
+   541→                  </div>
+   542→                  {cat.quote && (
+   543→                    <motion.p
+   544→                      initial={{ opacity: 0 }}
+   545→                      whileInView={{ opacity: 1 }}
+   546→                      viewport={{ once: true }}
+   547→                      transition={{ delay: 0.5, duration: 0.6 }}
+   548→                      className="mt-8 text-center text-warm-gray italic font-[family-name:var(--font-lato)] text-sm md:text-base"
+   549→                    >
+   550→                      &ldquo;{cat.quote}&rdquo;
+   551→                    </motion.p>
+   552→                  )}
+   553→                </div>
+   554→              </TabsContent>
+   555→            ))}
+   556→          </Tabs>
+   557→        </motion.div>
+   558→      </div>
+   559→
+   560→      {selectedService && (
+   561→        <ServiceDetailDialog
+   562→          service={selectedService}
+   563→          open={dialogOpen}
+   564→          onClose={() => setDialogOpen(false)}
+   565→        />
+   566→      )}
+   567→    </section>
+   568→  )
+   569→}

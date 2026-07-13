@@ -146,3 +146,27 @@ Stage Summary:
 - All pages import and render existing section components
 - Extra content added to services (CTA), academy (features), and about (story, mission, values)
 - Zero lint errors, all pages compile and serve correctly
+
+---
+Task ID: 8
+Agent: Main
+Task: Add service detail modals, academy course detail enhancement, and brochure download
+
+Work Log:
+- Verified ServicesSection.tsx already has 30+ services with detailed data (price, duration, description, includes, idealFor)
+- Verified ServiceDetailDialog component renders: name, duration badge, price, description, "What's Included" checklist, "Best For" section, Duration/Price info cards, "Book This Service" CTA
+- Verified AcademySection.tsx has courseExtras for all 7 courses with: modules (10-12 each), benefits (8-9 each), whyThisPrice, schedule, batch, kit details
+- Verified course detail dialog renders: course name, duration, price, certificate/placement badges, schedule/batch/kit info, "What You'll Learn" numbered modules, "What You Get" benefits, "Professional Kit Included" details, "Why This Investment Is Worth It" justification, Enquire Now + Brochure buttons
+- Verified brochure PDF exists at /public/Sparsh-Academy-Brochure.pdf (141KB, application/pdf)
+- Verified handleDownloadBrochure creates temp anchor, triggers download, shows toast
+- Fixed stale dev server issue (process had died, needed fresh restart)
+- Browser-verified all three features working:
+  1. Service cards show price + duration, clicking opens detail dialog with full package info
+  2. Academy courses show "View Details" button, opening dialog with modules, benefits, kit, cost justification
+  3. "Download Brochure" button downloads actual PDF file
+
+Stage Summary:
+- Service detail modals: ✅ Working - 30+ services with price, duration, package inclusions
+- Academy course details: ✅ Working - 7 courses with modules, benefits, kit, cost justification
+- Brochure download: ✅ Working - Downloads real PDF (141KB)
+- All features verified via agent-browser end-to-end testing

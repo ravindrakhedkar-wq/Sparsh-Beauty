@@ -1,0 +1,549 @@
+     1→     1→'use client'
+     2→     2→
+     3→     3→import { useRef, useEffect, useState } from 'react'
+     4→     4→import { motion, useInView, AnimatePresence } from 'framer-motion'
+     5→     5→import Image from 'next/image'
+     6→     6→import { Download, GraduationCap, Clock, Check, BookOpen, Award, Users, Briefcase, ChevronRight, X } from 'lucide-react'
+     7→     7→import { toast } from 'sonner'
+     8→     8→import { Button } from '@/components/ui/button'
+     9→     9→import { Card, CardContent } from '@/components/ui/card'
+    10→    10→import { Input } from '@/components/ui/input'
+    11→    11→import { Label } from '@/components/ui/label'
+    12→    12→import { Badge } from '@/components/ui/badge'
+    13→    13→import {
+    14→    14→  Dialog,
+    15→    15→  DialogContent,
+    16→    16→  DialogHeader,
+    17→    17→  DialogTitle,
+    18→    18→  DialogDescription,
+    19→    19→} from '@/components/ui/dialog'
+    20→    20→
+    21→    21→interface Course {
+    22→    22→  id: string
+    23→    23→  title: string
+    24→    24→  description: string
+    25→    25→  duration: string
+    26→    26→  price: number
+    27→    27→  image: string | null
+    28→    28→  certificate: boolean
+    29→    29→  placement: boolean
+    30→    30→}
+    31→    31→
+    32→    32→interface CourseExtra {
+    33→    33→  modules: string[]
+    34→    34→  benefits: string[]
+    35→    35→  whyThisPrice: string
+    36→    36→  schedule: string
+    37→    37→  batch: string
+    38→    38→  kit: string
+    39→    39→}
+    40→    40→
+    41→    41→const courseExtras: Record<string, CourseExtra> = {
+    42→    42→  'Professional Beautician Course': {
+    43→    43→    modules: [
+    44→    44→      'Hair Science & Hair Biology',
+    45→    45→      'Hair Cutting & Styling Techniques (15+ styles)',
+    46→    46→      'Hair Chemical Treatments (Keratin, Rebonding, Smoothening)',
+    47→    47→      'Skin Science & Skin Analysis',
+    48→    48→      'Professional Facials (8+ types)',
+    49→    49→      'Makeup Artistry (Bridal, Party, HD, Airbrush)',
+    50→    50→      'Nail Care & Nail Art',
+    51→    51→      'Waxing, Threading & Depilation',
+    52→    52→      'Salon Hygiene & Safety Standards',
+    53→    53→      'Client Communication & Consultation',
+    54→    54→      'Product Knowledge & Retail Sales',
+    55→    55→      'Business Basics for Beauticians',
+    56→    56→    ],
+    57→    57→    benefits: [
+    58→    58→      'Industry-recognized certification from Sparsh Academy',
+    59→    59→      'Hands-on practice with real clients during training',
+    60→    60→      'Complete professional beauty kit worth ₹8,000 included',
+    61→    61→      'Personal mentorship from Mrs. Geetanjali Khedkar',
+    62→    62→      'Portfolio development with before/after photos',
+    63→    63→      '100+ hours of practical training',
+    64→    64→      'Placement assistance at leading salons & spas',
+    65→    65→      'Lifetime access to alumni network & refresher sessions',
+    66→    66→      'Internship opportunity at Sparsh Beauty Salon',
+    67→    67→    ],
+    68→    68→    whyThisPrice: 'This is a comprehensive 6-month program covering Hair, Skin, Makeup, and Nail services — equivalent to enrolling in 4 separate specialized courses. The ₹45,000 fee includes your professional kit (₹8,000 value), certification, and placement support. Students typically recover their investment within 2–3 months of starting work as a beautician.',
+    69→    69→    schedule: 'Monday to Saturday, 10:00 AM – 2:00 PM (4 hours/day)',
+    70→    70→    batch: 'New batch every 1st and 15th of the month',
+    71→    71→    kit: 'Professional scissors, combs, brushes, makeup palette, skincare products set, practice mannequin head, nail art tools, cape & apron',
+    72→    72→  },
+    73→    73→  'Hair Styling & Hair Design': {
+    74→    74→    modules: [
+    75→    75→      'Hair Science Fundamentals',
+    76→    76→      'Face Shape & Hair Type Analysis',
+    77→    77→      'Precision Cutting Techniques (Layered, Bob, Pixie, Step cut)',
+    78→    78→      'Blow Drying & Styling (15+ styles)',
+    79→    79→      'Curling & Straightening Techniques',
+    80→    80→      'Bridal & Party Hairstyling',
+    81→    81→      'Hair Accessories & Updos',
+    82→    82→      'Men\'s Grooming & Styling',
+    83→    83→      'Trending International Styles',
+    84→    84→      'Client Consultation Skills',
+    85→    85→    ],
+    86→    86→    benefits: [
+    87→    87→      'Specialized hair styling certification',
+    88→    88→      '50+ hours of hands-on styling practice',
+    89→    89→      'Styling tools kit included (worth ₹4,000)',
+    90→    90→      'Learn 15+ trending hairstyles',
+    91→    91→      'Practice on real models',
+    92→    92→      'Photo portfolio of your work',
+    93→    93→      'Job placement at hair salons',
+    94→    94→      'Freelance opportunity support',
+    95→    95→    ],
+    96→    96→    whyThisPrice: 'At ₹25,000 for 3 months, this course offers specialized training at just ₹280/hour. The course pays for itself within the first month of working as a hairstylist, where you can earn ₹15,000–25,000/month. The included tools kit alone is worth ₹4,000.',
+    97→    97→    schedule: 'Monday to Friday, 11:00 AM – 1:00 PM (2 hours/day)',
+    98→    98→    batch: 'New batch every 1st of the month',
+    99→    99→    kit: 'Professional scissors, thinning shears, combs set, sectioning clips, blow dryer, curling iron, straightener, styling products set',
+   100→   100→  },
+   101→   101→  'Advanced Hair Chemical Treatments': {
+   102→   102→    modules: [
+   103→   103→      'Chemistry of Hair Bonds',
+   104→   104→      'Keratin Treatment (Brazilian & Japanese)',
+   105→   105→      'Hair Rebonding Techniques',
+   106→   106→      'Smoothening & Relaxing Treatments',
+   107→   107→      'Hair Botox & Fillers',
+   108→   108→      'Hair Coloring Theory & Practice',
+   109→   109→      'Highlighting & Balayage Techniques',
+   110→   110→      'Color Correction',
+   111→   111→      'Damage Prevention & Aftercare',
+   112→   112→      'Product Knowledge (Premium Brands)',
+   113→   113→      'Safety Protocols & Patch Testing',
+   114→   114→    ],
+   115→   115→    benefits: [
+   116→   116→      'Advanced certification in chemical treatments',
+   117→   117→      'Practice with premium salon products (L\'Oréal, Schwarzkopf)',
+   118→   118→      'Certificate valid across India',
+   119→   119→      'Product supplier connections for your own salon',
+   120→   120→      'Hands-on with 20+ real clients',
+   121→   121→      'Safety & allergy management training',
+   122→   122→      'Income boost: chemical treatment specialists earn 30–40% more',
+   123→   123→    ],
+   124→   124→    whyThisPrice: 'Chemical treatment specialists command premium pricing in salons. This 2-month course at ₹20,000 gives you skills that can add ₹5,000–10,000/month to your income. You\'ll work with the same premium products used in top salons.',
+   125→   125→    schedule: 'Monday to Friday, 2:00 PM – 4:00 PM (2 hours/day)',
+   126→   126→    batch: 'New batch every 1st of the month',
+   127→   127→    kit: 'Application brushes, gloves, bowls, sectioning tools, product samples kit',
+   128→   128→  },
+   129→   129→  'Professional Makeup Artist Course': {
+   130→   130→    modules: [
+   131→   131→      'Makeup Theory & Skin Science',
+   132→   132→      'Face Analysis & Color Theory',
+   133→   133→      'Bridal Makeup (Traditional, Contemporary, South Indian)',
+   134→   134→      'Engagement & Mehndi Night Makeup',
+   135→   135→      'Party & Event Makeup',
+   136→   136→      'HD & Airbrush Makeup Techniques',
+   137→   137→      'Fashion & Editorial Makeup',
+   138→   138→      'Contouring & Highlighting Mastery',
+   139→   139→      'Eye Makeup Techniques (Smokey, Cut Crease, Winged)',
+   140→   140→      'Lip Art & Color Matching',
+   141→   141→      'Portfolio Building & Photography',
+   142→   142→      'Client Management & Business Skills',
+   143→   143→    ],
+   144→   144→    benefits: [
+   145→   145→      'Professional Makeup Artist certification',
+   146→   146→      'Airbrush makeup machine included (worth ₹12,000)',
+   147→   147→      'Complete makeup kit with 30+ products (worth ₹8,000)',
+   148→   148→      '50+ hours of hands-on practice',
+   149→   149→      'Portfolio photoshoot included',
+   150→   150→      'Bridal trial experience with real bride',
+   151→   151→      'Freelance bridal artist earning potential: ₹3,000–15,000/event',
+   152→   152→      'Industry connections for wedding bookings',
+   153→   153→    ],
+   154→   154→    whyThisPrice: 'The ₹35,000 fee includes a professional airbrush machine (₹12,000) and a complete makeup kit (₹8,000) — that\'s ₹20,000 in equipment alone. Professional bridal makeup artists in Pune earn ₹5,000–15,000 per booking. Just 3–5 bridal bookings recover your entire course investment.',
+   155→   155→    schedule: 'Monday to Saturday, 10:00 AM – 1:00 PM (3 hours/day)',
+   156→   156→    batch: 'New batch every 1st and 15th of the month',
+   157→   157→    kit: 'Airbrush machine, foundation palette (12 shades), concealer kit, brush set (20 brushes), eye shadow palette, lipstick set, contour kit, setting spray, sanitizer, organizer case',
+   158→   158→  },
+   159→   159→  'Skin Care & Facial Therapy': {
+   160→   160→    modules: [
+   161→   161→      'Skin Biology & Skin Types',
+   162→   162→      'Skin Analysis & Consultation',
+   163→   163→      'Cleansing & Exfoliation Techniques',
+   164→   164→      'Professional Facials (10+ types)',
+   165→   165→      'Anti-Aging & Rejuvenation Treatments',
+   166→   166→      'Acne & Pigmentation Management',
+   167→   167→      'De-tan & Brightening Treatments',
+   168→   168→      'Facial Massage Techniques',
+   169→   169→      'Mask Preparation & Application',
+   170→   170→      'Product Knowledge (Dermatology-grade)',
+   171→   171→      'Client Aftercare Guidance',
+   172→   172→    ],
+   173→   173→    benefits: [
+   174→   174→      'Skin care specialist certification',
+   175→   175→      'Practice with professional-grade products',
+   176→   176→      'Skin care product kit included (worth ₹3,000)',
+   177→   177→      'Learn 10+ facial types',
+   178→   178→      'Understanding of skin conditions & treatments',
+   179→   179→      'Employment at skin clinics & dermatology centers',
+   180→   180→      'Can add facial services to your existing salon work',
+   181→   181→    ],
+   182→   182→    whyThisPrice: 'At ₹28,000 for 3 months, you get specialized skin care training with professional products. Skin care specialists earn ₹15,000–30,000/month at clinics. The product kit alone (₹3,000 value) plus the certification makes this excellent value.',
+   183→   183→    schedule: 'Monday to Friday, 2:00 PM – 4:00 PM (2 hours/day)',
+   184→   184→    batch: 'New batch every 1st of the month',
+   185→   185→    kit: 'Facial steamer, cleansing brush set, mask bowls, spatulas, skin analysis guide, product samples set, towels, headband',
+   186→   186→  },
+   187→   187→  'Salon Management Training': {
+   188→   188→    modules: [
+   189→   189→      'Salon Business Fundamentals',
+   190→   190→      'Client Relationship Management',
+   191→   191→      'Staff Hiring, Training & Management',
+   192→   192→      'Inventory & Product Management',
+   193→   193→      'Financial Management & Pricing Strategy',
+   194→   194→      'Marketing & Brand Building',
+   195→   195→      'Digital Marketing for Salons (Instagram, Facebook, Google)',
+   196→   196→      'Customer Experience Design',
+   197→   197→      'Hygiene & Compliance Standards',
+   198→   198→      'Technology & Booking Systems',
+   199→   199→    ],
+   200→   200→    benefits: [
+   201→   201→      'Salon management certification',
+   202→   202→      'Real-world business plan creation for your salon',
+   203→   203→      'Marketing templates & social media content plan',
+   204→   204→      'Vendor connection list for products & equipment',
+   205→   205→      'Pricing strategy spreadsheet',
+   206→   206→      'Staff management templates',
+   207→   207→      'One-on-one business mentoring session',
+   208→   208→    ],
+   209→   209→    whyThisPrice: 'This ₹15,000 course is an investment in your business. A well-managed salon can earn 2–3x more than a poorly managed one. The templates, strategies, and vendor connections alone can save you lakhs in trial-and-error costs when starting your salon.',
+   210→   210→    schedule: 'Saturday & Sunday, 10:00 AM – 2:00 PM (4 hours/day, 4 weekends)',
+   211→   211→    batch: 'New batch every month (weekend batches)',
+   212→   212→    kit: 'Business plan templates, pricing calculator, staff management guide, marketing content calendar, vendor contact list',
+   213→   213→  },
+   214→   214→  'Bridal Makeup Certification': {
+   215→   215→    modules: [
+   216→   216→      'Bridal Beauty Industry Overview',
+   217→   217→      'Bridal Consultation & Look Planning',
+   218→   218→      'Traditional Bridal Makeup (Hindu, Muslim, Christian)',
+   219→   219→      'Contemporary & Modern Bridal Looks',
+   220→   220→      'South Indian Bridal Makeup',
+   221→   221→      'Pre-Bridal Skin Care Routine',
+   222→   222→      'Engagement & Mehndi Looks',
+   223→   223→      'Reception & Reception-Change Looks',
+   224→   224→      'Hairstyling for Brides',
+   225→   225→      'Saree Draping Basics',
+   226→   226→      'Photography Makeup vs Real-Life Makeup',
+   227→   227→      'Bridal Business & Pricing',
+   228→   228→    ],
+   229→   229→    benefits: [
+   230→   230→      'Specialized Bridal Makeup certification',
+   231→   231→      'Hands-on with 5+ real brides during training',
+   232→   232→      'Complete bridal makeup kit (worth ₹10,000)',
+   233→   233→      'Portfolio photoshoot with professional photographer',
+   234→   234→      'Bridal booking leads from Sparsh Beauty network',
+   235→   235→      'Pricing guide for bridal packages',
+   236→   236→      'Average bridal booking in Pune: ₹15,000–50,000',
+   237→   237→      'Referral network for ongoing bookings',
+   238→   238→    ],
+   239→   239→    whyThisPrice: 'Bridal makeup is the highest-earning segment in beauty. At ₹22,000 for 2 months, just one bridal booking (₹15,000–50,000) can cover your entire course fee. The bridal kit included (₹10,000 value) plus the portfolio and industry connections make this the best ROI course we offer.',
+   240→   240→    schedule: 'Monday to Friday, 11:00 AM – 2:00 PM (3 hours/day)',
+   241→   241→    batch: 'New batch every 1st of the month',
+   242→   242→    kit: 'Airbrush machine, premium foundation palette (15 shades), concealer kit, contour palette, eye shadow bridal set, lipstick set (12 shades), brush set (25 brushes), false lashes collection, setting spray, sanitizer, bridal organizer case',
+   243→   243→  },
+   244→   244→}
+   245→   245→
+   246→   246→export default function AcademySection() {
+   247→   247→  const ref = useRef(null)
+   248→   248→  const isInView = useInView(ref, { once: true, margin: '-100px' })
+   249→   249→  const [courses, setCourses] = useState<Course[]>([])
+   250→   250→  const [loading, setLoading] = useState(true)
+   251→   251→  const [enquiryOpen, setEnquiryOpen] = useState(false)
+   252→   252→  const [detailOpen, setDetailOpen] = useState(false)
+   253→   253→  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
+   254→   254→  const [enquiryForm, setEnquiryForm] = useState({ name: '', mobile: '', email: '', course: '' })
+   255→   255→  const [submitting, setSubmitting] = useState(false)
+   256→   256→
+   257→   257→  useEffect(() => {
+   258→   258→    async function fetchCourses() {
+   259→   259→      try {
+   260→   260→        const res = await fetch('/api/courses')
+   261→   261→        if (res.ok) setCourses(await res.json())
+   262→   262→      } catch { /* silent */ }
+   263→   263→      finally { setLoading(false) }
+   264→   264→    }
+   265→   265→    fetchCourses()
+   266→   266→  }, [])
+   267→   267→
+   268→   268→  const openEnquiry = (courseTitle: string) => {
+   269→   269→    setSelectedCourse(courses.find(c => c.title === courseTitle) || null)
+   270→   270→    setEnquiryForm(prev => ({ ...prev, course: courseTitle }))
+   271→   271→    setEnquiryOpen(true)
+   272→   272→  }
+   273→   273→
+   274→   274→  const openDetail = (course: Course) => {
+   275→   275→    setSelectedCourse(course)
+   276→   276→    setDetailOpen(true)
+   277→   277→  }
+   278→   278→
+   279→   279→  const submitEnquiry = async () => {
+   280→   280→    if (!enquiryForm.name || !enquiryForm.mobile) {
+   281→   281→      toast.error('Please fill in your name and mobile number')
+   282→   282→      return
+   283→   283→    }
+   284→   284→    setSubmitting(true)
+   285→   285→    try {
+   286→   286→      const res = await fetch('/api/contact', {
+   287→   287→        method: 'POST',
+   288→   288→        headers: { 'Content-Type': 'application/json' },
+   289→   289→        body: JSON.stringify({
+   290→   290→          name: enquiryForm.name, mobile: enquiryForm.mobile,
+   291→   291→          email: enquiryForm.email || undefined,
+   292→   292→          subject: `Course Enquiry: ${selectedCourse?.title}`,
+   293→   293→          message: `I am interested in the ${selectedCourse?.title} course. Please provide more details.`,
+   294→   294→        }),
+   295→   295→      })
+   296→   296→      if (res.ok) {
+   297→   297→        toast.success('Enquiry submitted!', { description: 'We will get back to you soon.' })
+   298→   298→        setEnquiryOpen(false)
+   299→   299→        setEnquiryForm({ name: '', mobile: '', email: '', course: '' })
+   300→   300→      }
+   301→   301→    } catch { toast.error('Failed to submit enquiry') }
+   302→   302→    finally { setSubmitting(false) }
+   303→   303→  }
+   304→   304→
+   305→   305→  const handleDownloadBrochure = () => {
+   306→   306→    const link = document.createElement('a')
+   307→   307→    link.href = '/Sparsh-Academy-Brochure.pdf'
+   308→   308→    link.download = 'Sparsh-Beauty-Academy-Brochure.pdf'
+   309→   309→    document.body.appendChild(link)
+   310→   310→    link.click()
+   311→   311→    document.body.removeChild(link)
+   312→   312→    toast.success('Brochure download started!')
+   313→   313→  }
+   314→   314→
+   315→   315→  const extra = selectedCourse ? courseExtras[selectedCourse.title] : null
+   316→   316→
+   317→   317→  return (
+   318→   318→    <section id="academy" className="section-padding relative overflow-hidden" ref={ref}>
+   319→   319→      <div className="absolute inset-0">
+   320→   320→        <Image src="/images/academy.jpg" alt="" fill sizes="100vw" className="object-cover opacity-5" />
+   321→   321→        <div className="absolute inset-0 bg-cream/95" />
+   322→   322→      </div>
+   323→   323→
+   324→   324→      <div className="relative z-10 max-w-6xl mx-auto">
+   325→   325→        <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-center mb-10">
+   326→   326→          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold font-[family-name:var(--font-playfair)] text-charcoal mb-3">
+   327→   327→            Beauty <span className="text-gold-gradient">Academy</span>
+   328→   328→          </h2>
+   329→   329→          <div className="luxury-divider mb-4" />
+   330→   330→          <p className="text-xl md:text-2xl font-[family-name:var(--font-playfair)] text-charcoal font-medium mb-3">
+   331→   331→            Learn. Practice. <span className="text-rose-gold">Grow.</span>
+   332→   332→          </p>
+   333→   333→          <p className="text-warm-gray font-[family-name:var(--font-lato)] max-w-2xl mx-auto">
+   334→   334→            Join our professional beauty training programs and build a successful career in the beauty industry with hands-on experience and expert guidance.
+   335→   335→          </p>
+   336→   336→        </motion.div>
+   337→   337→
+   338→   338→        <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.3 }} className="flex justify-center mb-8">
+   339→   339→          <Button onClick={handleDownloadBrochure} variant="outline" className="border-gold text-gold hover:bg-gold/10 rounded-full font-[family-name:var(--font-lato)]">
+   340→   340→            <Download className="w-4 h-4 mr-2" />
+   341→   341→            Download Brochure
+   342→   342→          </Button>
+   343→   343→        </motion.div>
+   344→   344→
+   345→   345→        {loading ? (
+   346→   346→          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+   347→   347→            {[1, 2, 3].map(i => (
+   348→   348→              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm animate-pulse">
+   349→   349→                <div className="w-full h-44 bg-gray-200" />
+   350→   350→                <div className="p-5 space-y-3">
+   351→   351→                  <div className="h-5 bg-gray-200 rounded w-3/4" />
+   352→   352→                  <div className="h-3 bg-gray-200 rounded w-full" />
+   353→   353→                  <div className="h-3 bg-gray-200 rounded w-2/3" />
+   354→   354→                  <div className="h-8 bg-gray-200 rounded w-1/3 mt-4" />
+   355→   355→                </div>
+   356→   356→              </div>
+   357→   357→            ))}
+   358→   358→          </div>
+   359→   359→        ) : courses.length === 0 ? (
+   360→   360→          <div className="text-center py-12 text-warm-gray font-[family-name:var(--font-lato)]">
+   361→   361→            <GraduationCap className="w-12 h-12 mx-auto mb-3 opacity-30" />
+   362→   362→            <p className="text-lg">Courses coming soon!</p>
+   363→   363→          </div>
+   364→   364→        ) : (
+   365→   365→          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+   366→   366→            {courses.map((course, i) => (
+   367→   367→              <motion.div key={course.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.1 }} whileHover={{ y: -6 }} whileTap={{ scale: 0.98 }}>
+   368→   368→                <Card className="overflow-hidden border-rose-gold-light/20 shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+   369→   369→                  <div className="relative w-full h-44 bg-gradient-to-br from-soft-pink to-cream overflow-hidden">
+   370→   370→                    {course.image ? (
+   371→   371→                      <Image src={course.image} alt={course.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover" />
+   372→   372→                    ) : (
+   373→   373→                      <div className="w-full h-full flex items-center justify-center"><GraduationCap className="w-12 h-12 text-rose-gold-light" /></div>
+   374→   374→                    )}
+   375→   375→                  </div>
+   376→   376→                  <CardContent className="p-5 flex flex-col flex-1">
+   377→   377→                    <div className="flex flex-wrap gap-2 mb-3">
+   378→   378→                      {course.certificate && <Badge variant="secondary" className="bg-gold/10 text-gold-dark text-xs font-[family-name:var(--font-lato)]">Certificate</Badge>}
+   379→   379→                      {course.placement && <Badge variant="secondary" className="bg-rose-gold/10 text-rose-gold-dark text-xs font-[family-name:var(--font-lato)]">Placement Assistance</Badge>}
+   380→   380→                    </div>
+   381→   381→                    <h3 className="font-[family-name:var(--font-playfair)] font-semibold text-charcoal text-lg mb-2">{course.title}</h3>
+   382→   382→                    <p className="text-warm-gray text-sm font-[family-name:var(--font-lato)] line-clamp-3 mb-4 flex-1">{course.description}</p>
+   383→   383→
+   384→   384→                    {/* Quick info */}
+   385→   385→                    <div className="space-y-2 mb-4">
+   386→   386→                      {courseExtras[course.title] && (
+   387→   387→                        <>
+   388→   388→                          <div className="flex items-center gap-2 text-xs text-warm-gray font-[family-name:var(--font-lato)]">
+   389→   389→                            <BookOpen className="w-3.5 h-3.5 text-rose-gold flex-shrink-0" />
+   390→   390→                            <span>{courseExtras[course.title].modules.length} modules</span>
+   391→   391→                          </div>
+   392→   392→                          <div className="flex items-center gap-2 text-xs text-warm-gray font-[family-name:var(--font-lato)]">
+   393→   393→                            <Clock className="w-3.5 h-3.5 text-rose-gold flex-shrink-0" />
+   394→   394→                            <span>{courseExtras[course.title].schedule}</span>
+   395→   395→                          </div>
+   396→   396→                        </>
+   397→   397→                      )}
+   398→   398→                    </div>
+   399→   399→
+   400→   400→                    <div className="flex items-center justify-between mb-4">
+   401→   401→                      <span className="text-sm text-warm-gray font-[family-name:var(--font-lato)] font-medium">{course.duration}</span>
+   402→   402→                      <span className="text-lg font-bold text-charcoal font-[family-name:var(--font-playfair)]">₹{Math.round(course.price).toLocaleString('en-IN')}</span>
+   403→   403→                    </div>
+   404→   404→
+   405→   405→                    <div className="flex gap-2">
+   406→   406→                      <Button onClick={() => openDetail(course)} variant="outline" className="flex-1 border-rose-gold-light text-rose-gold hover:bg-rose-gold/5 rounded-full text-sm font-[family-name:var(--font-lato)]">
+   407→   407→                        View Details
+   408→   408→                      </Button>
+   409→   409→                      <Button onClick={() => openEnquiry(course.title)} className="flex-1 bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full text-sm font-[family-name:var(--font-lato)]">
+   410→   410→                        Enquire Now
+   411→   411→                      </Button>
+   412→   412→                    </div>
+   413→   413→                  </CardContent>
+   414→   414→                </Card>
+   415→   415→              </motion.div>
+   416→   416→            ))}
+   417→   417→          </div>
+   418→   418→        )}
+   419→   419→      </div>
+   420→   420→
+   421→   421→      {/* Course Detail Dialog */}
+   422→   422→      <AnimatePresence>
+   423→   423→        {selectedCourse && extra && (
+   424→   424→          <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+   425→   425→            <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+   426→   426→              <DialogHeader>
+   427→   427→                <DialogTitle className="font-[family-name:var(--font-playfair)] text-charcoal text-xl pr-8">
+   428→   428→                  {selectedCourse.title}
+   429→   429→                </DialogTitle>
+   430→   430→                <div className="flex flex-wrap gap-2 mt-1">
+   431→   431→                  <Badge className="bg-rose-gold/10 text-rose-gold-dark text-xs">{selectedCourse.duration}</Badge>
+   432→   432→                  <Badge className="bg-gold/10 text-gold-dark text-xs">{selectedCourse.price > 0 ? `₹${Math.round(selectedCourse.price).toLocaleString('en-IN')}` : 'Contact for Price'}</Badge>
+   433→   433→                  {selectedCourse.certificate && <Badge className="bg-green-50 text-green-700 text-xs">Certified</Badge>}
+   434→   434→                  {selectedCourse.placement && <Badge className="bg-blue-50 text-blue-700 text-xs">Placement Support</Badge>}
+   435→   435→                </div>
+   436→   436→              </DialogHeader>
+   437→   437→
+   438→   438→              <div className="space-y-6 mt-2">
+   439→   439→                {/* Schedule & Batch */}
+   440→   440→                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+   441→   441→                  <div className="bg-cream rounded-xl p-3">
+   442→   442→                    <div className="flex items-center gap-1.5 mb-1">
+   443→   443→                      <Clock className="w-3.5 h-3.5 text-rose-gold" />
+   444→   444→                      <span className="text-xs font-medium text-warm-gray font-[family-name:var(--font-lato)]">Schedule</span>
+   445→   445→                    </div>
+   446→   446→                    <p className="text-sm text-charcoal font-[family-name:var(--font-lato)]">{extra.schedule}</p>
+   447→   447→                  </div>
+   448→   448→                  <div className="bg-cream rounded-xl p-3">
+   449→   449→                    <div className="flex items-center gap-1.5 mb-1">
+   450→   450→                      <Users className="w-3.5 h-3.5 text-rose-gold" />
+   451→   451→                      <span className="text-xs font-medium text-warm-gray font-[family-name:var(--font-lato)]">Batch</span>
+   452→   452→                    </div>
+   453→   453→                    <p className="text-sm text-charcoal font-[family-name:var(--font-lato)]">{extra.batch}</p>
+   454→   454→                  </div>
+   455→   455→                  <div className="bg-cream rounded-xl p-3">
+   456→   456→                    <div className="flex items-center gap-1.5 mb-1">
+   457→   457→                      <Briefcase className="w-3.5 h-3.5 text-rose-gold" />
+   458→   458→                      <span className="text-xs font-medium text-warm-gray font-[family-name:var(--font-lato)]">Kit Included</span>
+   459→   459→                    </div>
+   460→   460→                    <p className="text-sm text-charcoal font-[family-name:var(--font-lato)]">Yes, see below</p>
+   461→   461→                  </div>
+   462→   462→                </div>
+   463→   463→
+   464→   464→                {/* Curriculum */}
+   465→   465→                <div>
+   466→   466→                  <h4 className="text-base font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-3 flex items-center gap-2">
+   467→   467→                    <BookOpen className="w-4 h-4 text-gold" /> What You&apos;ll Learn
+   468→   468→                  </h4>
+   469→   469→                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+   470→   470→                    {extra.modules.map((m, idx) => (
+   471→   471→                      <div key={idx} className="flex items-start gap-2 text-sm font-[family-name:var(--font-lato)] text-charcoal/80">
+   472→   472→                        <div className="w-5 h-5 rounded-full bg-rose-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs text-rose-gold font-bold">{idx + 1}</div>
+   473→   473→                        <span>{m}</span>
+   474→   474→                      </div>
+   475→   475→                    ))}
+   476→   476→                  </div>
+   477→   477→                </div>
+   478→   478→
+   479→   479→                {/* Benefits */}
+   480→   480→                <div>
+   481→   481→                  <h4 className="text-base font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-3 flex items-center gap-2">
+   482→   482→                    <Award className="w-4 h-4 text-gold" /> What You Get
+   483→   483→                  </h4>
+   484→   484→                  <div className="space-y-2">
+   485→   485→                    {extra.benefits.map((b) => (
+   486→   486→                      <div key={b} className="flex items-start gap-2">
+   487→   487→                        <Check className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
+   488→   488→                        <span className="text-sm font-[family-name:var(--font-lato)] text-charcoal/80">{b}</span>
+   489→   489→                      </div>
+   490→   490→                    ))}
+   491→   491→                  </div>
+   492→   492→                </div>
+   493→   493→
+   494→   494→                {/* Kit */}
+   495→   495→                <div className="bg-soft-pink/50 rounded-xl p-4">
+   496→   496→                  <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-2">Professional Kit Included</h4>
+   497→   497→                  <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)]">{extra.kit}</p>
+   498→   498→                </div>
+   499→   499→
+   500→   500→                {/* Why This Price */}
+   501→   501→                <div className="bg-cream rounded-xl p-4">
+   502→   502→                  <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-2">Why This Investment Is Worth It</h4>
+   503→   503→                  <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)] leading-relaxed">{extra.whyThisPrice}</p>
+   504→   504→                </div>
+   505→   505→
+   506→   506→                {/* CTAs */}
+   507→   507→                <div className="flex gap-3">
+   508→   508→                  <Button onClick={() => { setDetailOpen(false); openEnquiry(selectedCourse.title) }} className="flex-1 bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full font-[family-name:var(--font-lato)]">
+   509→   509→                    Enquire Now
+   510→   510→                  </Button>
+   511→   511→                  <Button onClick={handleDownloadBrochure} variant="outline" className="border-gold text-gold hover:bg-gold/10 rounded-full font-[family-name:var(--font-lato)]">
+   512→   512→                    <Download className="w-4 h-4 mr-1.5" /> Brochure
+   513→   513→                  </Button>
+   514→   514→                </div>
+   515→   515→              </div>
+   516→   516→            </DialogContent>
+   517→   517→          </Dialog>
+   518→   518→        )}
+   519→   519→      </AnimatePresence>
+   520→   520→
+   521→   521→      {/* Enquiry Dialog */}
+   522→   522→      <Dialog open={enquiryOpen} onOpenChange={setEnquiryOpen}>
+   523→   523→        <DialogContent className="sm:max-w-md">
+   524→   524→          <DialogHeader>
+   525→   525→            <DialogTitle className="font-[family-name:var(--font-playfair)] text-charcoal">Course Enquiry</DialogTitle>
+   526→   526→            <DialogDescription className="font-[family-name:var(--font-lato)] text-warm-gray">Interested in: {selectedCourse?.title}</DialogDescription>
+   527→   527→          </DialogHeader>
+   528→   528→          <div className="space-y-4 pt-2">
+   529→   529→            <div className="space-y-2">
+   530→   530→              <Label className="font-[family-name:var(--font-lato)] text-sm text-charcoal">Full Name *</Label>
+   531→   531→              <Input placeholder="Enter your name" value={enquiryForm.name} onChange={e => setEnquiryForm(p => ({ ...p, name: e.target.value }))} />
+   532→   532→            </div>
+   533→   533→            <div className="space-y-2">
+   534→   534→              <Label className="font-[family-name:var(--font-lato)] text-sm text-charcoal">Mobile Number *</Label>
+   535→   535→              <Input type="tel" placeholder="Enter your mobile number" value={enquiryForm.mobile} onChange={e => setEnquiryForm(p => ({ ...p, mobile: e.target.value }))} />
+   536→   536→            </div>
+   537→   537→            <div className="space-y-2">
+   538→   538→              <Label className="font-[family-name:var(--font-lato)] text-sm text-charcoal">Email (Optional)</Label>
+   539→   539→              <Input type="email" placeholder="Enter your email" value={enquiryForm.email} onChange={e => setEnquiryForm(p => ({ ...p, email: e.target.value }))} />
+   540→   540→            </div>
+   541→   541→            <Button onClick={submitEnquiry} disabled={submitting} className="w-full bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full font-[family-name:var(--font-lato)]">
+   542→   542→              {submitting ? 'Submitting...' : 'Submit Enquiry'}
+   543→   543→            </Button>
+   544→   544→          </div>
+   545→   545→        </DialogContent>
+   546→   546→      </Dialog>
+   547→   547→    </section>
+   548→   548→  )
+   549→   549→}
