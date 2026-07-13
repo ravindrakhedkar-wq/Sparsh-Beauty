@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sparsh Beauty Academy - Course Brochure</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Lato', sans-serif; color: #2d2d2d; background: #faf8f5; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; background: white; position: relative; overflow: hidden; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .cover { background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #2d2d2d 100%); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+  .cover .logo { font-family: 'Playfair Display', serif; font-size: 42px; margin-bottom: 8px; }
+  .cover .logo span:first-child { color: #c9a96e; }
+  .cover .logo span:last-child { color: #b76e79; }
+  .cover .tagline { font-family: 'Playfair Display', serif; font-style: italic; color: #c9a96e; font-size: 16px; margin-bottom: 30px; letter-spacing: 2px; }
+  .cover h1 { font-family: 'Playfair Display', serif; font-size: 36px; margin-bottom: 12px; color: white; }
+  .cover p { color: rgba(255,255,255,0.7); font-size: 14px; max-width: 400px; line-height: 1.6; }
+  .cover .divider { width: 80px; height: 2px; background: linear-gradient(90deg, transparent, #c9a96e, transparent); margin: 20px auto; }
+  .cover .founder { margin-top: 40px; font-size: 13px; color: rgba(255,255,255,0.5); }
+  .content { padding: 40px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 24px; color: #2d2d2d; text-align: center; margin-bottom: 8px; }
+  .section-title span { color: #b76e79; }
+  .gold-line { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, #c9a96e, transparent); margin: 0 auto 24px; }
+  .intro { text-align: center; color: #6b6b6b; font-size: 13px; line-height: 1.7; max-width: 500px; margin: 0 auto 30px; }
+  .course-card { border: 1px solid #e8ddd4; border-radius: 12px; padding: 20px; margin-bottom: 16px; page-break-inside: avoid; }
+  .course-card h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: #2d2d2d; margin-bottom: 8px; }
+  .course-card .meta { display: flex; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+  .course-card .meta span { font-size: 12px; color: #6b6b6b; display: flex; align-items: center; gap: 4px; }
+  .course-card .meta .price { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #b76e79; }
+  .course-card .desc { font-size: 12px; color: #6b6b6b; line-height: 1.6; margin-bottom: 10px; }
+  .course-card .modules h4 { font-size: 12px; font-weight: 700; color: #c9a96e; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .course-card .modules ul { list-style: none; padding: 0; columns: 2; column-gap: 16px; }
+  .course-card .modules li { font-size: 11px; color: #6b6b6b; padding: 2px 0; padding-left: 14px; position: relative; }
+  .course-card .modules li::before { content: ""; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: #e8c4c8; }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-right: 6px; }
+  .badge-cert { background: #fef3c7; color: #92400e; }
+  .badge-place { background: #fce7f3; color: #8b4553; }
+  .footer-section { background: #2d2d2d; color: rgba(255,255,255,0.6); padding: 30px 40px; text-align: center; }
+  .footer-section .brand { font-family: 'Playfair Display', serif; font-size: 20px; color: #c9a96e; margin-bottom: 8px; }
+  .footer-section p { font-size: 11px; line-height: 1.6; }
+  .footer-section .contact { margin-top: 16px; }
+  .footer-section .contact p { font-size: 12px; }
+  @media print { .page { margin: 0; box-shadow: none; } }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="page cover">
+  <div class="logo"><span>Sparsh</span> <span>Beauty</span></div>
+  <div class="tagline">Where Beauty Meets Expertise</div>
+  <div class="divider"></div>
+  <h1>Academy<br>Course Brochure</h1>
+  <p>Professional beauty training programs designed to transform passionate learners into skilled, confident beauty professionals.</p>
+  <div class="divider"></div>
+  <div class="founder">Founded by Mrs. Geetanjali Khedkar<br>Master's in Beauty | Beautic College, Maharashtra Technical Board<br>Viman Nagar, Pune</div>
+</div>
+
+<!-- COURSES PAGE 1 -->
+<div class="page">
+  <div class="content">
+    <div class="section-title">Our <span>Courses</span></div>
+    <div class="gold-line"></div>
+    <p class="intro">Choose from our industry-aligned courses, each designed with hands-on training, professional certification, and career support.</p>
+
+    <div class="course-card">
+      <h3>Professional Beautician Course</h3>
+      <div class="meta">
+        <span class="price">₹45,000</span>
+        <span>6 Months</span>
+        <span>Mon–Sat, 10AM–2PM</span>
+        <span class="badge badge-cert">Certificate</span>
+        <span class="badge badge-place">Placement</span>
+      </div>
+      <p class="desc">Our flagship course covering Hair, Skin, Makeup, and Nail services. The most comprehensive program for aspiring beauty professionals. Includes a professional kit worth ₹8,000.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Hair Science & Biology</li>
+          <li>Cutting & Styling (15+ styles)</li>
+          <li>Chemical Treatments</li>
+          <li>Skin Science & Analysis</li>
+          <li>Professional Facials (8+)</li>
+          <li>Makeup Artistry</li>
+          <li>Nail Care & Art</li>
+          <li>Waxing & Threading</li>
+          <li>Hygiene & Safety</li>
+          <li>Client Communication</li>
+          <li>Product Knowledge</li>
+          <li>Business Basics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <h3>Hair Styling & Hair Design</h3>
+      <div class="meta">
+        <span class="price">₹25,000</span>
+        <span>3 Months</span>
+        <span>Mon–Fri, 11AM–1PM</span>
+        <span class="badge badge-cert">Certificate</span>
+        <span class="badge badge-place">Placement</span>
+      </div>
+      <p class="desc">Master the art of hair styling — from classic cuts to trending international styles. Includes styling tools kit worth ₹4,000. Practice with real models.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Hair Science Fundamentals</li>
+          <li>Face Shape Analysis</li>
+          <li>Precision Cutting</li>
+          <li>Blow Drying (15+ styles)</li>
+          <li>Curling & Straightening</li>
+          <li>Bridal Hairstyling</li>
+          <li>Updos & Accessories</li>
+          <li>Men's Grooming</li>
+          <li>International Trends</li>
+          <li>Client Consultation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <h3>Advanced Hair Chemical Treatments</h3>
+      <div class="meta">
+        <span class="price">₹20,000</span>
+        <span>2 Months</span>
+        <span>Mon–Fri, 2–4PM</span>
+        <span class="badge badge-cert">Certificate</span>
+      </div>
+      <p class="desc">Specialized training in keratin, rebonding, smoothening, botox, coloring, and highlighting. Work with premium L'Oréal and Schwarzkopf products.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Hair Bond Chemistry</li>
+          <li>Keratin Treatment</li>
+          <li>Rebonding Techniques</li>
+          <li>Smoothening & Relaxing</li>
+          <li>Hair Botox</li>
+          <li>Hair Coloring</li>
+          <li>Balayage & Highlights</li>
+          <li>Color Correction</li>
+          <li>Damage Prevention</li>
+          <li>Safety Protocols</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COURSES PAGE 2 -->
+<div class="page">
+  <div class="content">
+    <div class="course-card">
+      <h3>Professional Makeup Artist Course</h3>
+      <div class="meta">
+        <span class="price">₹35,000</span>
+        <span>4 Months</span>
+        <span>Mon–Sat, 10AM–1PM</span>
+        <span class="badge badge-cert">Certificate</span>
+        <span class="badge badge-place">Placement</span>
+      </div>
+      <p class="desc">Complete makeup artistry covering bridal, party, HD, airbrush, and fashion makeup. Includes airbrush machine (₹12,000) and full makeup kit (₹8,000). Bridal artists in Pune earn ₹5,000–15,000 per booking.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Makeup Theory & Skin Science</li>
+          <li>Face Analysis & Color Theory</li>
+          <li>Bridal Makeup (3 styles)</li>
+          <li>Engagement Makeup</li>
+          <li>Party & Event Makeup</li>
+          <li>HD & Airbrush Techniques</li>
+          <li>Fashion & Editorial</li>
+          <li>Contouring Mastery</li>
+          <li>Eye Makeup Techniques</li>
+          <li>Portfolio Building</li>
+          <li>Business Skills</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <h3>Bridal Makeup Certification</h3>
+      <div class="meta">
+        <span class="price">₹22,000</span>
+        <span>2 Months</span>
+        <span>Mon–Fri, 11AM–2PM</span>
+        <span class="badge badge-cert">Certificate</span>
+        <span class="badge badge-place">Placement</span>
+      </div>
+      <p class="desc">Specialized bridal makeup — the highest-earning beauty segment. Includes premium bridal kit (₹10,000), professional portfolio shoot, and booking leads from Sparsh Beauty network. Average bridal booking in Pune: ₹15,000–50,000.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Bridal Industry Overview</li>
+          <li>Consultation & Look Planning</li>
+          <li>Traditional Bridal Looks</li>
+          <li>Contemporary & Modern</li>
+          <li>South Indian Bridal</li>
+          <li>Pre-Bridal Skin Care</li>
+          <li>Engagement & Mehndi Looks</li>
+          <li>Reception Change Looks</li>
+          <li>Saree Draping Basics</li>
+          <li>Bridal Business & Pricing</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <h3>Skin Care & Facial Therapy</h3>
+      <div class="meta">
+        <span class="price">₹28,000</span>
+        <span>3 Months</span>
+        <span>Mon–Fri, 2–4PM</span>
+        <span class="badge badge-cert">Certificate</span>
+      </div>
+      <p class="desc">Specialized skin care training with professional products. Learn 10+ facial types and skin condition management. Includes skin care product kit worth ₹3,000.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Skin Biology & Types</li>
+          <li>Skin Analysis</li>
+          <li>Cleansing & Exfoliation</li>
+          <li>10+ Facial Types</li>
+          <li>Anti-Aging Treatments</li>
+          <li>Acne & Pigmentation</li>
+          <li>De-tan & Brightening</li>
+          <li>Facial Massage</li>
+          <li>Product Knowledge</li>
+          <li>Aftercare Guidance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <h3>Salon Management Training</h3>
+      <div class="meta">
+        <span class="price">₹15,000</span>
+        <span>1 Month (Weekends)</span>
+        <span>Sat–Sun, 10AM–2PM</span>
+        <span class="badge badge-cert">Certificate</span>
+        <span class="badge badge-place">Placement</span>
+      </div>
+      <p class="desc">For aspiring salon owners. Learn business planning, staff management, marketing, pricing strategy, and digital marketing for salons. Includes business templates and vendor connections.</p>
+      <div class="modules">
+        <h4>What You'll Learn</h4>
+        <ul>
+          <li>Business Fundamentals</li>
+          <li>Client Management</li>
+          <li>Staff Hiring & Training</li>
+          <li>Inventory Management</li>
+          <li>Financial & Pricing</li>
+          <li>Marketing & Branding</li>
+          <li>Digital Marketing</li>
+          <li>Customer Experience</li>
+          <li>Technology & Booking</li>
+          <li>Compliance Standards</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BACK PAGE -->
+<div class="page">
+  <div class="footer-section" style="display: flex; flex-direction: column; justify-content: center; min-height: 297mm;">
+    <div class="brand">Sparsh Beauty</div>
+    <p style="font-family: 'Playfair Display', serif; font-style: italic; color: #c9a96e; margin-bottom: 30px;">Where Beauty Meets Expertise</p>
+    <p style="max-width: 400px; margin: 0 auto 20px;">Join hundreds of successful beauty professionals who started their careers at Sparsh Beauty Academy. Our hands-on training, industry certification, and placement support ensure you're ready to shine from day one.</p>
+    <div class="contact">
+      <p><strong>Address:</strong> Shop No. 5, Neco NX, Opposite Panchshil Tower, Viman Nagar, Pune 411014</p>
+      <p><strong>Phone:</strong> +91-9876543210</p>
+      <p><strong>WhatsApp:</strong> +91-9876543210</p>
+      <p><strong>Email:</strong> info@sparshbeauty.com</p>
+      <p style="margin-top: 20px;"><strong>Instagram:</strong> @sparshbeautypune</p>
+    </div>
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <p style="font-size: 10px;">© {new Date().getFullYear()} Geetanjali's Sparsh Beauty Hair Salon & Academy. All rights reserved.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
