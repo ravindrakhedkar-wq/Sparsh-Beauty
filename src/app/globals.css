@@ -216,6 +216,15 @@
   justify-content: center;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Star rating */
 .star-filled {
   color: #c9a96e;

@@ -170,3 +170,31 @@ Stage Summary:
 - Academy course details: ✅ Working - 7 courses with modules, benefits, kit, cost justification
 - Brochure download: ✅ Working - Downloads real PDF (141KB)
 - All features verified via agent-browser end-to-end testing
+
+---
+Task ID: 9
+Agent: Main
+Task: Fix navbar page shortcuts, broken dialogs, remove PDF download
+
+Work Log:
+- Added horizontal scrollable nav shortcut bar to Navbar visible on all screen sizes below lg breakpoint
+- Nav bar shows: Home, About Us, Services, Academy, Products, Gallery, Contact, Book Now (pill-shaped, scrollable on mobile)
+- Desktop (lg+) shows inline nav links in header as before
+- Replaced broken shadcn Dialog (Radix UI portal) with custom ServiceModal component in ServicesSection
+- Custom modal uses fixed positioning with z-[100], backdrop, body scroll lock - no Radix dependency
+- Replaced broken shadcn Dialog with CourseDetailModal + EnquiryModal in AcademySection
+- Removed PDF download button from AcademySection per user request
+- Removed "Download Brochure" button from course detail modal
+- Added scrollbar-hide CSS utility class for the horizontal nav bar
+- Replaced shadcn Sheet-based mobile menu with custom slide-over panel
+- Browser verified all 3 modals working: Service detail, Course detail, Enquiry form
+- Browser verified nav shortcuts visible on mobile (430px) and desktop (1280px)
+- Lint: clean, zero errors
+
+Stage Summary:
+- Navbar now has visible page shortcut links on ALL screen sizes
+- Service detail popups working with custom modal (price, duration, includes, book CTA)
+- Course detail popups working with custom modal (curriculum, benefits, kit, pricing justification)
+- Enquiry form popup working (name, mobile, email fields)
+- PDF download button removed from Academy
+- Zero lint errors

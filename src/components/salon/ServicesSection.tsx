@@ -1,18 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { useState, useRef, useEffect } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { Scissors, Sparkles, Palette, Heart, Clock, Check, X, ChevronRight } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import Link from 'next/link'
 
 interface ServiceDetail {
@@ -146,7 +140,7 @@ const skinCareServices: ServiceDetail[] = [
     price: 2499,
     duration: '75–90 min',
     shortDesc: 'Advanced anti-aging treatment to restore youthful glow',
-    description: 'A multi-step treatment using serums, LED therapy, and premium masks to boost collagen production, reduce fine lines, and restore your skin\'s natural youthful radiance.',
+    description: "A multi-step treatment using serums, LED therapy, and premium masks to boost collagen production, reduce fine lines, and restore your skin's natural youthful radiance.",
     includes: ['Skin assessment', 'Micro-dermabrasion', 'Vitamin C serum infusion', 'LED light therapy', 'Collagen mask', 'Lifting massage', 'SPF protection'],
     idealFor: 'Aging skin with fine lines, dullness, or loss of firmness.',
   },
@@ -345,6 +339,123 @@ const allCategories = [
   { key: 'nail-beauty', label: 'Nail & Beauty', services: nailBeautyServices, quote: 'Enhance the beauty and health of your nails with professional care, nourishment, and precision grooming.' },
 ]
 
+/* ─── Custom Modal (no Radix portal) ─── */
+function ServiceModal({
+  service,
+  open,
+  onClose,
+}: {
+  service: ServiceDetail | null
+  open: boolean
+  onClose: () => void
+}) {
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  if (!open || !service) return null
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      {/* Panel */}
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto z-10 animate-in fade-in zoom-in-95 duration-200">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-soft-pink/80 flex items-center justify-center text-charcoal/60 hover:text-charcoal hover:bg-soft-pink transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-start gap-3 mb-5">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-soft-pink flex items-center justify-center text-rose-gold">
+              {service.icon}
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-[family-name:var(--font-playfair)] text-charcoal text-xl font-bold pr-8">
+                {service.name}
+              </h3>
+              <div className="flex items-center gap-3 mt-1.5">
+                <Badge className="bg-rose-gold/10 text-rose-gold border-0 text-xs font-[family-name:var(--font-lato)]">
+                  {service.duration}
+                </Badge>
+                <span className="text-lg font-bold text-rose-gold font-[family-name:var(--font-playfair)]">
+                  ₹{service.price.toLocaleString('en-IN')}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)] leading-relaxed mb-5">
+            {service.description}
+          </p>
+
+          {/* What's Included */}
+          <div className="mb-5">
+            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-3 flex items-center gap-2">
+              <Check className="w-4 h-4 text-gold" />
+              What&apos;s Included
+            </h4>
+            <div className="space-y-2">
+              {service.includes.map((item) => (
+                <div key={item} className="flex items-start gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-3 h-3 text-gold" />
+                  </div>
+                  <span className="text-sm text-charcoal/80 font-[family-name:var(--font-lato)]">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Best For */}
+          <div className="bg-soft-pink/50 rounded-xl p-4 mb-5">
+            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-2">
+              Best For
+            </h4>
+            <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)]">
+              {service.idealFor}
+            </p>
+          </div>
+
+          {/* Quick Info */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="bg-cream rounded-xl p-3 text-center">
+              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Duration</p>
+              <p className="text-sm font-semibold text-charcoal font-[family-name:var(--font-lato)]">{service.duration}</p>
+            </div>
+            <div className="bg-cream rounded-xl p-3 text-center">
+              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Starting Price</p>
+              <p className="text-sm font-semibold text-rose-gold font-[family-name:var(--font-playfair)]">₹{service.price.toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <Link href="/booking" onClick={onClose}>
+            <Button className="w-full bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full font-[family-name:var(--font-lato)] py-5 text-base">
+              Book This Service
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ServiceCard({ service, index, onClick }: { service: ServiceDetail; index: number; onClick: () => void }) {
   return (
     <motion.div
@@ -394,100 +505,15 @@ function ServiceCard({ service, index, onClick }: { service: ServiceDetail; inde
   )
 }
 
-function ServiceDetailDialog({ service, open, onClose }: { service: ServiceDetail | null; open: boolean; onClose: () => void }) {
-  if (!service) return null
-
-  return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-soft-pink flex items-center justify-center text-rose-gold flex-shrink-0">
-              {service.icon}
-            </div>
-            <div>
-              <DialogTitle className="font-[family-name:var(--font-playfair)] text-charcoal text-xl">
-                {service.name}
-              </DialogTitle>
-              <div className="flex items-center gap-3 mt-1">
-                <Badge className="bg-rose-gold/10 text-rose-gold border-0 text-xs font-[family-name:var(--font-lato)]">
-                  {service.duration}
-                </Badge>
-                <span className="text-lg font-bold text-rose-gold font-[family-name:var(--font-playfair)]">
-                  ₹{service.price.toLocaleString('en-IN')}
-                </span>
-              </div>
-            </div>
-          </div>
-        </DialogHeader>
-
-        <div className="space-y-5 mt-2">
-          {/* Description */}
-          <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)] leading-relaxed">
-            {service.description}
-          </p>
-
-          {/* What's Included */}
-          <div>
-            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-3 flex items-center gap-2">
-              <Check className="w-4 h-4 text-gold" />
-              What&apos;s Included
-            </h4>
-            <div className="space-y-2">
-              {service.includes.map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Check className="w-3 h-3 text-gold" />
-                  </div>
-                  <span className="text-sm text-charcoal/80 font-[family-name:var(--font-lato)]">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Ideal For */}
-          <div className="bg-soft-pink/50 rounded-xl p-4">
-            <h4 className="text-sm font-semibold font-[family-name:var(--font-playfair)] text-charcoal mb-2">
-              Best For
-            </h4>
-            <p className="text-sm text-warm-gray font-[family-name:var(--font-lato)]">
-              {service.idealFor}
-            </p>
-          </div>
-
-          {/* Quick Info */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-cream rounded-xl p-3 text-center">
-              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Duration</p>
-              <p className="text-sm font-semibold text-charcoal font-[family-name:var(--font-lato)]">{service.duration}</p>
-            </div>
-            <div className="bg-cream rounded-xl p-3 text-center">
-              <p className="text-xs text-warm-gray font-[family-name:var(--font-lato)] mb-1">Starting Price</p>
-              <p className="text-sm font-semibold text-rose-gold font-[family-name:var(--font-playfair)]">₹{service.price.toLocaleString('en-IN')}</p>
-            </div>
-          </div>
-
-          {/* CTA */}
-          <Link href="/booking" onClick={onClose}>
-            <Button className="w-full bg-rose-gold hover:bg-rose-gold-dark text-white rounded-full font-[family-name:var(--font-lato)] py-5">
-              Book This Service
-            </Button>
-          </Link>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
 export default function ServicesSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [selectedService, setSelectedService] = useState<ServiceDetail | null>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const openDetail = (service: ServiceDetail) => {
     setSelectedService(service)
-    setDialogOpen(true)
+    setModalOpen(true)
   }
 
   return (
@@ -557,13 +583,11 @@ export default function ServicesSection() {
         </motion.div>
       </div>
 
-      {selectedService && (
-        <ServiceDetailDialog
-          service={selectedService}
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-        />
-      )}
+      <ServiceModal
+        service={selectedService}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </section>
   )
 }
