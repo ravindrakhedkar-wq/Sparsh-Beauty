@@ -107,7 +107,7 @@ export default function Navbar() {
             {/* Desktop CTA */}
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/917721933444"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2.5 text-green-500 hover:text-green-600 hover:bg-green-50 rounded-full transition-all duration-300"
@@ -125,7 +125,7 @@ export default function Navbar() {
             {/* Mobile: Icons + Hamburger */}
             <div className="flex items-center gap-1 lg:hidden">
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/917721933444"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`p-2 rounded-full transition-colors duration-300 ${
@@ -224,7 +224,7 @@ export default function Navbar() {
               {/* Panel Footer */}
               <div className="px-6 py-4 border-t border-rose-gold-light/10">
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/917721933444"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 py-2 text-sm text-charcoal/50 font-[family-name:var(--font-lato)] hover:text-green-600 transition-colors"

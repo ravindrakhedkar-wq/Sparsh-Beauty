@@ -69,14 +69,14 @@ export default function ContactSection() {
     {
       icon: <Phone className="w-5 h-5" />,
       label: 'Phone',
-      value: '+91-9876543210',
-      href: 'tel:+919876543210',
+      value: '+91-7721933444',
+      href: 'tel:+917721933444',
     },
     {
       icon: <MessageCircle className="w-5 h-5" />,
       label: 'WhatsApp',
       value: 'Chat on WhatsApp',
-      href: 'https://wa.me/919876543210',
+      href: 'https://wa.me/917721933444',
     },
     {
       icon: <Mail className="w-5 h-5" />,
@@ -273,7 +273,7 @@ export default function ContactSection() {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/919876543210"
+        href="https://wa.me/917721933444"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-40 bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-colors"

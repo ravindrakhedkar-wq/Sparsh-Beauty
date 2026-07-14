@@ -106,9 +106,9 @@ export default function Footer() {
             </h3>
             <div className="space-y-3 text-sm font-[family-name:var(--font-lato)] text-white/60">
               <p>Shop No. 5, Neco NX, Opposite Panchshil Tower, Viman Nagar, Pune 411014</p>
-              <p className="text-gold">+91-9876543210</p>
+              <p className="text-gold">+91-7721933444</p>
               <p>info@sparshbeauty.com</p>
-              <p>WhatsApp: +91-9876543210</p>
+              <p>WhatsApp: +91-7721933444</p>
             </div>
 
             {/* Social Icons */}

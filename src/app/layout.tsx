@@ -77,7 +77,7 @@ export default function RootLayout({
                 "@type": "Person",
                 name: "Mrs. Geetanjali Khedkar",
               },
-              telephone: "+91-9876543210",
+              telephone: "+91-7721933444",
               openingHours: "Mo-Sa 09:00-21:00",
               priceRange: "$$",
               image: "/images/salon-interior.jpg",
