@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -57,15 +58,27 @@ export default function Navbar() {
         <nav className="max-w-7xl mx-auto px-5 md:px-8 lg:px-10">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-1.5 group">
-              <span className="text-2xl md:text-[26px] font-bold font-[family-name:var(--font-playfair)] text-gold-gradient tracking-wide group-hover:opacity-90 transition-opacity">
-                Sparsh
-              </span>
-              <span className={`text-2xl md:text-[26px] font-bold font-[family-name:var(--font-playfair)] transition-colors duration-300 ${
-                transparent ? 'text-rose-gold-light' : 'text-rose-gold'
-              }`}>
-                Beauty
-              </span>
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="relative w-10 h-10 md:w-11 md:h-11 flex-shrink-0">
+                <Image
+                  src="/images/sparsh-logo.png"
+                  alt="Sparsh Beauty Logo"
+                  fill
+                  sizes="(max-width: 768px) 40px, 44px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-2xl md:text-[26px] font-bold font-[family-name:var(--font-playfair)] text-gold-gradient tracking-wide group-hover:opacity-90 transition-opacity">
+                  Sparsh
+                </span>
+                <span className={`text-2xl md:text-[26px] font-bold font-[family-name:var(--font-playfair)] transition-colors duration-300 ${
+                  transparent ? 'text-rose-gold-light' : 'text-rose-gold'
+                }`}>
+                  Beauty
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Nav Links */}
@@ -174,9 +187,20 @@ export default function Navbar() {
             >
               {/* Panel Header */}
               <div className="flex items-center justify-between px-6 py-5 border-b border-rose-gold-light/10">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-lg font-bold text-gold-gradient font-[family-name:var(--font-playfair)]">Sparsh</span>
-                  <span className="text-lg font-bold text-rose-gold font-[family-name:var(--font-playfair)]">Beauty</span>
+                <div className="flex items-center gap-2">
+                  <div className="relative w-8 h-8 flex-shrink-0">
+                    <Image
+                      src="/images/sparsh-logo.png"
+                      alt="Sparsh Beauty Logo"
+                      fill
+                      sizes="32px"
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg font-bold text-gold-gradient font-[family-name:var(--font-playfair)]">Sparsh</span>
+                    <span className="text-lg font-bold text-rose-gold font-[family-name:var(--font-playfair)]">Beauty</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}

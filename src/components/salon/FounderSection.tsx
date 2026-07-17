@@ -31,7 +31,7 @@ export default function FounderSection() {
             <div className="relative">
               <div className="relative w-64 h-72 md:w-72 md:h-80 rounded-2xl overflow-hidden border-4 border-gold/30 shadow-xl">
                 <Image
-                  src="/images/founder.jpg"
+                  src="/images/geetanjali-khedkar.jpg"
                   alt="Mrs. Geetanjali Khedkar"
                   fill
                   sizes="(max-width: 1024px) 288px, 288px"

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Navbar from '@/components/salon/Navbar'
 import HeroSection from '@/components/salon/HeroSection'
 import WhyChooseSection from '@/components/salon/WhyChooseSection'
+import BrandSection from '@/components/salon/BrandSection'
 import BlogSection from '@/components/salon/BlogSection'
 import Footer from '@/components/salon/Footer'
 import { Scissors, Sparkles, Palette, GraduationCap, ShoppingBag, ArrowRight } from 'lucide-react'
@@ -74,6 +75,7 @@ export default function Home() {
         </section>
 
         <WhyChooseSection />
+        <BrandSection />
         <BlogSection />
       </main>
       <Footer />
